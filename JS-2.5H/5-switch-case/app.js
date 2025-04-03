@@ -51,7 +51,7 @@ switch (userRole) {
         console.log("Bilinmeyen rol.");
 }
 
-// 4. Numeric değerle işlem yapma
+// 4. Numeric değerle işlem yapma (Özellikle sayısal puanlar için kullanılabilir)
 let score = 75;  // Puan, 0 ile 100 arasında
 switch (true) {
     case (score >= 90):
@@ -70,7 +70,7 @@ switch (true) {
         console.log("D");
 }
 
-// 5. Kullanıcı inputunu yönetme (Orta seviye bir uygulama)
+// 5. Kullanıcı inputunu yönetme (Hızlı işlem yapma)
 let action = 'delete';  // 'view', 'edit', 'delete' gibi işlemler
 switch (action) {
     case 'view':
