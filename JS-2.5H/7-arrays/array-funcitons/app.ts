@@ -15,8 +15,8 @@ const users = [
     {id: 2, name: "Ayşe", age: 30},
     {id: 3, name: "Mehmet", age: 35}
 ];
-const adults = users.filter(user => user.age > 25);
-console.log("Yaşı 25’ten büyük olanlar:", adults);
+const newuserList = users.filter(user => user.age > 25);
+console.log("Yaşı 25’ten büyük olanlar:", newuserList);
 // Çıktı: [{ id: 2, name: "Ayşe", age: 30 }, { id: 3, name: "Mehmet", age: 35 }]
 
 // 2️⃣ map() - Her elemanı dönüştürüp yeni bir array döndürür
