@@ -4,13 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="80e64932-a64b-4042-8e62-dbed4b7bbc4a" name="Changes" comment="2-variables_types &amp;&amp; 3-string&amp;number functions">
-      <change afterPath="$PROJECT_DIR$/JS-2.5H/4-if-else/app.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/JS-2.5H/4-if-else/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/JS-2.5H/5-switch-case/app.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/JS-2.5H/5-switch-case/index.html" afterDir="false" />
+    <list default="true" id="80e64932-a64b-4042-8e62-dbed4b7bbc4a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/JS-2.5H/6-functions/app.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/JS-2.5H/6-functions/callback.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/JS-2.5H/6-functions/hof&amp;callbackDiff.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/JS-2.5H/6-functions/hof.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/JS-2.5H/6-functions/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/JS-2.5H/7-arrays/app.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/JS-2.5H/7-arrays/array-funcitons/app.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/JS-2.5H/7-arrays/array-funcitons/cheatsheet.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/JS-2.5H/7-arrays/array-funcitons/cheatsheet.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/JS-2.5H/7-arrays/array-funcitons/cheatsheet.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/JS-2.5H/7-arrays/array-funcitons/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/JS-2.5H/7-arrays/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JS-2.5H/3-string-number functions/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/JS-2.5H/3-string-number functions/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,8 +27,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="HTML File" />
         <option value="JavaScript File" />
+        <option value="TypeScript File" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -67,6 +75,8 @@
       <workItem from="1742894352638" duration="205000" />
       <workItem from="1743171767112" duration="132000" />
       <workItem from="1743259796943" duration="2736000" />
+      <workItem from="1743705077175" duration="11000" />
+      <workItem from="1743930597207" duration="4843000" />
     </task>
     <task id="LOCAL-00001" summary=".">
       <option name="closed" value="true" />
@@ -84,15 +94,44 @@
       <option name="project" value="LOCAL" />
       <updated>1743681961293</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="4-if-else &amp;&amp; 5-switch-case">
+      <option name="closed" value="true" />
+      <created>1743683107214</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1743683107214</updated>
+    </task>
+    <task id="LOCAL-00004" summary="5-switch-case">
+      <option name="closed" value="true" />
+      <created>1743683360039</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1743683360039</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="." />
     <MESSAGE value="2-variables_types &amp;&amp; 3-string&amp;number functions" />
-    <option name="LAST_COMMIT_MESSAGE" value="2-variables_types &amp;&amp; 3-string&amp;number functions" />
+    <MESSAGE value="4-if-else &amp;&amp; 5-switch-case" />
+    <MESSAGE value="5-switch-case" />
+    <option name="LAST_COMMIT_MESSAGE" value="5-switch-case" />
   </component>
 </project>
