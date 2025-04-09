@@ -33,6 +33,8 @@ console.log(buyukKahve("Veli")); // Çıktı: Veli için 400 ml kahve hazır!
 
 // 3. Array Metotlarıyla HOF: Sipariş Listesi İşleme
 const musteriler = ["Ali", "Ayşe", "Veli"];
+musteriler.forEach(isim => console.log(`${isim} kahvesini aldı.`)); //her bir müşteri için bu kod döner.
+
 console.log(musteriler.map(isim => `Sade kahve ${isim} için hazır!`)); // Çıktı: ["Sade kahve Ali için hazır!", ...]
 console.log(musteriler.filter(isim => isim.length > 3)); // Çıktı: ["Ayşe", "Veli"]
 console.log(musteriler.reduce((siparis, isim) => siparis + `${isim}, `, "Siparişler: ")); // Çıktı: "Siparişler: Ali, Ayşe, Veli, "
