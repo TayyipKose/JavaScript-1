@@ -1,66 +1,80 @@
-/*
-Higher Order Function Nedir?
-HOF, fonksiyonları esnek bir şekilde kullanma sanatıdır. Yani:
-- Bir fonksiyonu başka bir fonksiyona parametre olarak verebilirsin.
-- Ya da bir fonksiyon, başka bir fonksiyonu döndürebilir.
-Bu, kodunu daha esnek, tekrar kullanılabilir (reusable) ve güçlü yapar.
+// 🍕 HOF (Higher Order Function) - Pizza Dükkanı Örneği
 
-Gerçek Hayat Analojisi: Kahve Dükkanı
-Bir kahve dükkanın var. Müşterilere kahve hazırlıyorsun:
-- "Ne yapacağını" söylersin (kahve hazırla) → bu bir fonksiyon.
-- "Nasıl yapacağını" özelleştirirsin (sade, sütlü, şekerli) → bu özelleştirme HOF’un gücü.
-HOF, kahve makinesi gibi: Ona hangi tarifi vereceğini söylersin, o da o tarife göre kahve yapar.
-*/
-
-// 1. Temel HOF: Tarifi Parametre Olarak Alma
-function sadeKahve(isim: string): string {
-    return `${isim} için sade kahve hazır!`;
+// 1️⃣ Fonksiyonu Parametre Olarak Alan HOF
+function margaritaPizza(isim: string): string {
+    return `${isim} için Margarita pizza hazır!`;
 }
 
-function kahveHazirla(tarifFonksiyonu: (isim: string) => string, isim: string): string {
-    return tarifFonksiyonu(isim);
+function pizzaHazirla(pizzaTarifi: (isim: string) => string, isim: string): string {
+    return pizzaTarifi(isim);
 }
-console.log(kahveHazirla(sadeKahve, "Ali")); // Çıktı: Ali için sade kahve hazır!
 
-// 2. Fonksiyon Döndüren HOF: Kahve Boyutu Makinesi
-function kahveBoyutu(boyut: number) {
-    return (isim: string) => `${isim} için ${boyut} ml kahve hazır!`;
+console.log(pizzaHazirla(margaritaPizza, "Ali"));
+// 👉 Ali için Margarita pizza hazır!
+
+// 2️⃣ Fonksiyon Döndüren HOF
+function pizzaBoyutuSec(boyut: string) {
+    return (isim: string) => `${isim} için ${boyut} boy pizza hazır!`;
 }
-const kucukKahve = kahveBoyutu(200);
-const buyukKahve = kahveBoyutu(400);
-console.log(kucukKahve("Ayşe")); // Çıktı: Ayşe için 200 ml kahve hazır!
-console.log(buyukKahve("Veli")); // Çıktı: Veli için 400 ml kahve hazır!
 
-// 3. Array Metotlarıyla HOF: Sipariş Listesi İşleme
+const kucukPizza = pizzaBoyutuSec("küçük");
+const buyukPizza = pizzaBoyutuSec("büyük");
+
+console.log(kucukPizza("Ayşe"));
+// 👉 Ayşe için küçük boy pizza hazır!
+console.log(buyukPizza("Veli"));
+// 👉 Veli için büyük boy pizza hazır!
+
+// 3️⃣ HOF + Array Kullanımı
 const musteriler = ["Ali", "Ayşe", "Veli"];
-musteriler.forEach(isim => console.log(`${isim} kahvesini aldı.`)); //her bir müşteri için bu kod döner.
 
-console.log(musteriler.map(isim => `Sade kahve ${isim} için hazır!`)); // Çıktı: ["Sade kahve Ali için hazır!", ...]
-console.log(musteriler.filter(isim => isim.length > 3)); // Çıktı: ["Ayşe", "Veli"]
-console.log(musteriler.reduce((siparis, isim) => siparis + `${isim}, `, "Siparişler: ")); // Çıktı: "Siparişler: Ali, Ayşe, Veli, "
+musteriler.forEach(isim => console.log(`${isim} pizzası hazır.`));
+// 👉 Ali pizzası hazır. Ayşe pizzası hazır. Veli pizzası hazır.
 
-// 4. Yetki Kontrolü: Barista Rolü HOF
-function baristaKontrolu(gerekliRol: string) {
-    return (barista: { isim: string, rol: string }) => barista.rol === gerekliRol;
+const siparisler = musteriler.map(isim => `${isim} için pizza pişiriliyor...`);
+console.log(siparisler);
+// 👉 ["Ali için pizza pişiriliyor...", "Ayşe için pizza pişiriliyor...", "Veli için pizza pişiriliyor..."]
+
+const uzunIsimler = musteriler.filter(isim => isim.length > 3);
+console.log(uzunIsimler);
+// 👉 ["Ayşe", "Veli"]
+
+const ozet = musteriler.reduce((acc, isim) => acc + `${isim}, `, "Siparişler: ");
+console.log(ozet);
+// 👉 Siparişler: Ali, Ayşe, Veli,
+
+// 4️⃣ Yetki Kontrolü - HOF ile
+function yetkiKontrolu(gerekliRol: string) {
+    return (personel: { isim: string, rol: string }) => personel.rol === gerekliRol;
 }
-const kahveYapabilirMi = baristaKontrolu("usta");
-console.log(kahveYapabilirMi({ isim: "Ali", rol: "çırak" })); // Çıktı: false
-console.log(kahveYapabilirMi({ isim: "Ayşe", rol: "usta" })); // Çıktı: true
 
-// 5. Callback ile HOF: Kahve Teslimatı
-function kahveTeslimEt(isim: string, callback: (mesaj: string) => void) {
-    const mesaj = `${isim} için kahve teslim edildi!`;
+const sadeceUsta = yetkiKontrolu("usta");
+
+console.log(sadeceUsta({ isim: "Ali", rol: "stajyer" })); // 👉 false
+console.log(sadeceUsta({ isim: "Ayşe", rol: "usta" }));   // 👉 true
+
+// 5️⃣ Callback ile Teslimat
+function pizzayiTeslimEt(isim: string, callback: (mesaj: string) => void) {
+    const mesaj = `${isim} için pizza teslim edildi!`;
     callback(mesaj);
 }
-kahveTeslimEt("Veli", mesaj => console.log(mesaj)); // Çıktı: Veli için kahve teslim edildi!
 
-// 6. Kompleks HOF: Rol Kontrolü + Teslimat
-function rolBazliTeslimat(rolKontrol: (b: { isim: string, rol: string }) => boolean) {
-    return (barista: { isim: string, rol: string }, callback: (mesaj: string) => void) => {
-        const durum = rolKontrol(barista) ? "kahveyi yapabilir!" : "kahveyi yapamaz!";
-        callback(`${barista.isim} ${durum}`);
+pizzayiTeslimEt("Veli", mesaj => console.log(mesaj));
+// 👉 Veli için pizza teslim edildi!
+
+// 6️⃣ Komple HOF: Rol + Teslimat
+function rolKontrolluTeslim(yetkiFonksiyonu: (p: { isim: string, rol: string }) => boolean) {
+    return (personel: { isim: string, rol: string }, callback: (mesaj: string) => void) => {
+        const mesaj = yetkiFonksiyonu(personel)
+            ? `${personel.isim} pizzayı teslim edebilir!`
+            : `${personel.isim} pizzayı teslim edemez!`;
+        callback(mesaj);
     };
 }
-const ustaTeslimat = rolBazliTeslimat(kahveYapabilirMi);
-ustaTeslimat({ isim: "Ali", rol: "çırak" }, mesaj => console.log(mesaj)); // Çıktı: Ali kahveyi yapamaz!
-ustaTeslimat({ isim: "Ayşe", rol: "usta" }, mesaj => console.log(mesaj)); // Çıktı: Ayşe kahveyi yapabilir!
+
+const ustaTeslim = rolKontrolluTeslim(sadeceUsta);
+
+ustaTeslim({ isim: "Ali", rol: "stajyer" }, mesaj => console.log(mesaj));
+// 👉 Ali pizzayı teslim edemez!
+ustaTeslim({ isim: "Ayşe", rol: "usta" }, mesaj => console.log(mesaj));
+// 👉 Ayşe pizzayı teslim edebilir!
