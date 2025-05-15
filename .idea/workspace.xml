@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="80e64932-a64b-4042-8e62-dbed4b7bbc4a" name="Changes" comment="hof small edit" />
+    <list default="true" id="80e64932-a64b-4042-8e62-dbed4b7bbc4a" name="Changes" comment="hof exam editted">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JS-2.5H/9-get-set/get-set.ts" beforeDir="false" afterPath="$PROJECT_DIR$/JS-2.5H/9-get-set/get-set.ts" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -74,6 +77,8 @@
       <workItem from="1744116272797" duration="592000" />
       <workItem from="1744183198052" duration="3425000" />
       <workItem from="1744190810141" duration="4709000" />
+      <workItem from="1744362533732" duration="283000" />
+      <workItem from="1747292079945" duration="398000" />
     </task>
     <task id="LOCAL-00001" summary=".">
       <option name="closed" value="true" />
@@ -155,7 +160,15 @@
       <option name="project" value="LOCAL" />
       <updated>1744198977578</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="hof exam editted">
+      <option name="closed" value="true" />
+      <created>1744362784080</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1744362784081</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -181,6 +194,7 @@
     <MESSAGE value="8-object &amp; 9-get/set" />
     <MESSAGE value="callback-hof small edit" />
     <MESSAGE value="hof small edit" />
-    <option name="LAST_COMMIT_MESSAGE" value="hof small edit" />
+    <MESSAGE value="hof exam editted" />
+    <option name="LAST_COMMIT_MESSAGE" value="hof exam editted" />
   </component>
 </project>

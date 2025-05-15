@@ -1,186 +1,113 @@
 // @ts-nocheck
-// ========== GETTER VE SETTER - MID LEVEL KONU ANLATIMI ==========
-// Bu bölümde, getter ve setter'ı junior seviyesinin ötesine taşıyarak mid-level bir geliştiriciye hitap edeceğiz.
-// Amaç: Gerçek projelerde kullanılabilir, performans odaklı ve karmaşık bir sistem tasarlamak.
-// Senaryo: E-ticaret sepet yönetimi - stok kontrolü, indirim kodları, hata yönetimi ve immutable veri yapısı.
 
-// -------------------
-// 1. NEDEN GETTER/SETTER KULLANIYORUZ? (MID-LEVEL PERSPEKTİF)
-// - **Kapsülleme (Encapsulation):** Private değişkenleri korur, dışarıya kontrollü arayüz sunar.
-// - **Yan Etkiler:** Değer değiştiğinde veya okunduğunda iş mantığı çalıştırır (log, API çağrısı, state güncelleme).
-// - **Performans:** Gereksiz yeniden hesaplamaları önler, önbellekleme (caching) sağlar.
-// - **Hata Yönetimi:** Geçersiz veri girişini engeller, kullanıcıya anlamlı hatalar döndürür.
-// - **Immutable Veri:** Orijinal veriyi bozmadan kopyalarla çalışır (React/Angular performans optimizasyonu).
-
-// -------------------
-// 2. ÖRNEK SENARYO: E-TİCARET SEPET SİSTEMİ
-// Bir ShoppingCart class'ı oluşturacağız. Özellikler:
-// - Ürün ekleme/güncelleme (stok kontrolü ile)
-// - İndirim kodu uygulama
-// - Toplam fiyat hesaplama (dinamik getter)
-// - Sepet kapasite sınırı
-// - Hata yönetimi ve loglama
-
-// Tür tanımları
+// Ürün tipi
 interface Product {
     id: string;
     name: string;
     price: number;
-    stock: number;
 }
 
+// Sepet öğesi
 interface CartItem {
     product: Product;
     quantity: number;
-    discount?: number; // Opsiyonel indirim yüzdesi
 }
 
-// Sepet yönetim class'ı
-class ShoppingCart {
-    private _items: CartItem[] = []; // Sepet öğeleri (private)
-    private _maxItems: number = 10; // Maksimum sepet kapasitesi
-    private _discountCodes: Map<string, number> = new Map([
-        ["SAVE10", 10],
-        ["SAVE20", 20],
-    ]); // İndirim kodları
-    private _totalCache: number | null = null; // Toplamı önbelleğe alma (performans için)
+class SimpleCart {
+    private _items: CartItem[] = [];
 
-    constructor() {
-        console.log("Sepet oluşturuldu.");
-    }
-
-    // Getter: Sepet öğelerini immutable şekilde döndürür
+    // Getter: Sepetteki ürünleri okuma (dışarıya kopya veriyoruz)
     get items(): CartItem[] {
-        return [...this._items]; // Kopya döndürerek orijinali koruyoruz
+        return [...this._items];
     }
 
-    // Setter: Sepete ürün ekler veya günceller
-    set items(newItem: CartItem) {
-        try {
-            // Kapasite kontrolü
-            if (this._items.length >= this._maxItems && !this._items.some(item => item.product.id === newItem.product.id)) {
-                throw new Error("Sepet kapasitesi dolu!");
-            }
+    // Setter: Sepete ürün ekleme veya güncelleme
+    set addItem(newItem: CartItem) {
+        const index = this._items.findIndex(
+            (item) => item.product.id === newItem.product.id
+        );
 
-            // Stok kontrolü
-            if (newItem.quantity > newItem.product.stock) {
-                throw new Error(
-                    `${newItem.product.name} için yeterli stok yok! Mevcut: ${newItem.product.stock}`
-                );
-            }
-
-            const existingItemIndex = this._items.findIndex(
-                (item) => item.product.id === newItem.product.id
-            );
-
-            if (existingItemIndex >= 0) {
-                // Ürün zaten varsa güncelle
-                this._items[existingItemIndex].quantity = newItem.quantity;
-                this._items[existingItemIndex].discount = newItem.discount;
-                console.log(`${newItem.product.name} güncellendi.`);
-            } else {
-                // Yeni ürün ekle
-                this._items.push({ ...newItem }); // Immutable kopya
-                console.log(`${newItem.product.name} sepete eklendi.`);
-            }
-
-            // Toplam cache'ini sıfırla (değişiklik olduğu için)
-            this._totalCache = null;
-        } catch (error) {
-            console.error("Hata:", error.message);
+        if (index >= 0) {
+            // Ürün varsa, miktarı güncelle
+            this._items[index].quantity = newItem.quantity;
+            console.log(`${newItem.product.name} güncellendi.`);
+        } else {
+            // Yeni ürün ekle
+            this._items.push(newItem);
+            console.log(`${newItem.product.name} sepete eklendi.`);
         }
     }
 
-    // Getter: Toplam fiyatı dinamik hesaplar (önbellek ile performans)
+    // Getter: Sepet toplam fiyatı
     get totalPrice(): number {
-        if (this._totalCache !== null) {
-            console.log("Önbellekten döndü.");
-            return this._totalCache; // Önbellek varsa kullan
-        }
-
-        const total = this._items.reduce((sum, item) => {
-            const itemPrice = item.product.price * item.quantity;
-            const discount = item.discount || 0;
-            return sum + itemPrice * (1 - discount / 100);
+        return this._items.reduce((sum, item) => {
+            return sum + item.product.price * item.quantity;
         }, 0);
-
-        this._totalCache = total; // Hesaplanan değeri önbelleğe al
-        return total;
-    }
-
-    // Setter: İndirim kodu uygular
-    set discountCode(code: string) {
-        const discountPercentage = this._discountCodes.get(code);
-        if (!discountPercentage) {
-            console.error("Geçersiz indirim kodu!");
-            return;
-        }
-
-        // Tüm ürünlere indirim uygula
-        this._items = this._items.map((item) => ({
-            ...item,
-            discount: discountPercentage,
-        }));
-
-        this._totalCache = null; // Toplamı yeniden hesaplatmak için sıfırla
-        console.log(`İndirim kodu ${code} (%${discountPercentage}) uygulandı.`);
-    }
-
-    // Getter: Sepet durumunu özetler
-    get summary(): string {
-        if (this._items.length === 0) return "Sepet boş.";
-        return this._items
-            .map((item) => `${item.product.name}: ${item.quantity} adet`)
-            .join(", ") + ` | Toplam: ${this.totalPrice} TL`;
     }
 }
 
-// -------------------
-// 3. KULLANIM ÖRNEĞİ
-const cart = new ShoppingCart();
+// KULLANIM ÖRNEĞİ
 
-// Ürünler tanımla
-const laptop: Product = { id: "p1", name: "Laptop", price: 5000, stock: 5 };
-const mouse: Product = { id: "p2", name: "Mouse", price: 200, stock: 10 };
+const cart = new SimpleCart();
 
-// Sepete ekle
-cart.items = { product: laptop, quantity: 2 }; // Çıktı: "Laptop sepete eklendi."
-cart.items = { product: mouse, quantity: 3 };  // Çıktı: "Mouse sepete eklendi."
+const book: Product = { id: "b1", name: "Kitap", price: 100 };
+const pen: Product = { id: "p1", name: "Kalem", price: 20 };
 
-// Sepet özetini al
-console.log(cart.summary); // Çıktı: "Laptop: 2 adet, Mouse: 3 adet | Toplam: 10600 TL"
+// Sepete ürün ekle
+cart.addItem = { product: book, quantity: 2 };
+cart.addItem = { product: pen, quantity: 5 };
 
-// Toplam fiyatı kontrol et
-console.log(cart.totalPrice); // Çıktı: 10600 (2*5000 + 3*200)
-console.log(cart.totalPrice); // Çıktı: "Önbellekten döndü." 10600 (tekrar hesaplanmadı)
+// Sepeti görüntüle
+console.log(cart.items);
+// Toplam fiyatı göster
+console.log("Toplam:", cart.totalPrice); // 100*2 + 20*5 = 200 + 100 = 300
 
-// İndirim kodu uygula
-cart.discountCode = "SAVE20"; // Çıktı: "İndirim kodu SAVE20 (%20) uygulandı."
-console.log(cart.summary); // Çıktı: "Laptop: 2 adet, Mouse: 3 adet | Toplam: 8480 TL"
-
-// Hatalı deneme
-cart.items = { product: laptop, quantity: 10 }; // Çıktı: "Hata: Laptop için yeterli stok yok! Mevcut: 5"
-
-
-// -------------------
-// 4. NEDEN BU ŞEKİLDE TASARLADIK?
-// - **Getter (items):** Immutable kopya döndürerek orijinal veriyi koruduk.
-// - **Setter (items):** Stok ve kapasite kontrolü ile hata yönetimi yaptık.
-// - **Getter (totalPrice):** Önbellekleme ile performansı optimize ettik.
-// - **Setter (discountCode):** İndirim kodlarını merkezi bir yerden yönetip tüm sepete uyguladık.
-// - **Getter (summary):** Kullanıcı dostu bir özet sunduk.
-
-// -------------------
-// 5. MİD-LEVEL İÇİN ÖNEMLİ NOKTALAR
-// - **Performans:** totalPrice getter'ında önbellek kullanarak gereksiz hesaplamaları önledik.
-// - **Hata Yönetimi:** Try-catch ile kullanıcıya anlamlı hatalar sunduk.
-// - **Kapsülleme:** _items ve _discountCodes private tutularak dışarıdan manipülasyona kapattık.
-// - **Esneklik:** discountCode setter'ı ile dinamik indirim yönetimi sağladık.
-
-//6. MÜLAKAT İÇİN
-// Mülakatlar İçin Tak Tak Cevaplar (Mid-Level)
-// - Getter nedir, nasıl kullanırsın? "Private değişkeni okurken çalışır. Ör: Sepet toplamını getter ile önbellekleyerek hesapladım."
-// - Setter ne işe yarar? "Değeri güncellerken kontrol ve yan etki ekler. Ör: Ürün eklerken stok kontrolü yapıp önbelleği sıfırladım."
-// - Neden getter/setter? "Kapsülleme, hata yönetimi ve performans için. İş mantığını merkezileştirir."
-// - Gerçek projede nasıl kullandın? "E-ticaret sepetinde getter ile immutable liste, setter ile stok ve indirim yönettim."
-// - Performans nasıl etkilenir? "Getter’da önbellek ile hesaplamayı azalttım, setter’da gereksiz işlemleri engelledim."
+/**
+ * Bu örnek neyi gösteriyor?
+ * -----------------------------
+ * Bu örnek, TypeScript ile **basit bir alışveriş sepeti (cart)** sınıfı tanımlayıp,
+ * ürün ekleme, güncelleme ve toplam fiyat hesaplama gibi temel işlemleri kapsar.
+ * Gerçek hayattaki e-ticaret mantığıyla benzer bir yapıyı modellemek için kullanılır.
+ *
+ * Öğrenilen Teknik ve Kavramlar:
+ * ----------------------------------
+ * 1. **Interface Kullanımı**
+ *    - `Product` ve `CartItem` tipleri `interface` ile tanımlanmıştır.
+ *    - Bu sayede her ürün ve sepet elemanı belirli bir yapıdadır.
+ *
+ * 2. **Encapsulation (Kapsülleme)**
+ *    - Sepet öğeleri `_items` isimli `private` bir dizi içinde tutulur.
+ *    - Böylece doğrudan dışarıdan erişim engellenir, veri bütünlüğü korunur.
+ *
+ * 3. **Getter - Setter Metotları**
+ *    - `get items`: Sepetteki ürünleri dışarıya verir, fakat kopya döner (orijinal dizi bozulmaz).
+ *    - `set addItem`: Sepete ürün ekler veya aynı ürün varsa sadece miktarını günceller.
+ *    - `get totalPrice`: Sepetteki tüm ürünlerin toplam fiyatını dinamik olarak hesaplar.
+ *
+ * 4. **Array Methodları**
+ *    - `findIndex()`: Sepette ürün olup olmadığını kontrol eder.
+ *    - `reduce()`: Toplam fiyatı hesaplarken kullanılır.
+ *
+ * 5. **Sınıf Kullanımı (Class)**
+ *    - `SimpleCart` sınıfı, bir alışveriş sepetinin mantığını kapsar.
+ *    - Nesne yönelimli programlama prensipleriyle yazılmıştır (OOP - Object Oriented Programming).
+ *
+ * 6. **Immutability (Değişmezlik) Prensibi**
+ *    - `get items()` içinde `return [...this._items]` ifadesiyle dışarıya orijinal dizi değil,
+ *      bir kopyası verilir. Böylece dışarıdan `this._items` dizisi bozulamaz.
+ *
+ * Teknik Akış:
+ * --------------
+ * 1. `SimpleCart` sınıfından bir `cart` nesnesi oluşturuluyor.
+ * 2. `Product` tipinde kitap ve kalem nesneleri tanımlanıyor.
+ * 3. Sepete önce 2 kitap, sonra 5 kalem ekleniyor.
+ * 4. Ürün sepette varsa `quantity` güncelleniyor, yoksa yeni ürün olarak ekleniyor.
+ * 5. `cart.items` ile sepetin içeriği gösteriliyor.
+ * 6. `cart.totalPrice` ile tüm ürünlerin toplam fiyatı hesaplanıyor.
+ *
+ *  Notlar:
+ * ---------
+ * - `set` fonksiyonu metod gibi çağrılmaz. Atama yapılır: `cart.addItem = {...}`
+ * - Sepet içerisine aynı ürün 2 kez eklenirse, miktar güncellenir; kopya eklenmez.
+ * - `console.log()` ile çıktılar hem güncelleme bilgisi verir hem sepeti görmemizi sağlar.
+ */
