@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="80e64932-a64b-4042-8e62-dbed4b7bbc4a" name="Changes" comment="hof exam editted">
+    <list default="true" id="80e64932-a64b-4042-8e62-dbed4b7bbc4a" name="Changes" comment="getter-setter.2">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JS-2.5H/9-get-set/get-set.ts" beforeDir="false" afterPath="$PROJECT_DIR$/JS-2.5H/9-get-set/get-set.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JS-2.5H/6-functions/hof.ts" beforeDir="false" afterPath="$PROJECT_DIR$/JS-2.5H/6-functions/hof.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,7 +78,7 @@
       <workItem from="1744183198052" duration="3425000" />
       <workItem from="1744190810141" duration="4709000" />
       <workItem from="1744362533732" duration="283000" />
-      <workItem from="1747292079945" duration="398000" />
+      <workItem from="1747292079945" duration="1443000" />
     </task>
     <task id="LOCAL-00001" summary=".">
       <option name="closed" value="true" />
@@ -168,7 +168,23 @@
       <option name="project" value="LOCAL" />
       <updated>1744362784081</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="getter-setter">
+      <option name="closed" value="true" />
+      <created>1747292488715</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1747292488715</updated>
+    </task>
+    <task id="LOCAL-00013" summary="getter-setter.2">
+      <option name="closed" value="true" />
+      <created>1747292797454</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1747292797454</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -195,6 +211,8 @@
     <MESSAGE value="callback-hof small edit" />
     <MESSAGE value="hof small edit" />
     <MESSAGE value="hof exam editted" />
-    <option name="LAST_COMMIT_MESSAGE" value="hof exam editted" />
+    <MESSAGE value="getter-setter" />
+    <MESSAGE value="getter-setter.2" />
+    <option name="LAST_COMMIT_MESSAGE" value="getter-setter.2" />
   </component>
 </project>
