@@ -5,8 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="80e64932-a64b-4042-8e62-dbed4b7bbc4a" name="Changes" comment="getter-setter.2">
+      <change afterPath="$PROJECT_DIR$/JS-2.5H/10-loops/do-while.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/JS-2.5H/10-loops/for.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/JS-2.5H/10-loops/foreach.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/JS-2.5H/10-loops/while.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/JS-2.5H/11-spread&amp;rest/spread&amp;rest.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/JS-2.5H/12-iterators&amp;generators/i&amp;g.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/JS-2.5H/13-timeOut-Math-Date-setInterval-try_catch/mix.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/JS-2.5H/14-promise/promise.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/JS-2.5H/15-async-await/async&amp;await.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/JS-2.5H/16-oop/oop.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JS-2.5H/6-functions/hof.ts" beforeDir="false" afterPath="$PROJECT_DIR$/JS-2.5H/6-functions/hof.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JS-2.5H/7-arrays/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/JS-2.5H/7-arrays/app.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JS-2.5H/8-object/object.ts" beforeDir="false" afterPath="$PROJECT_DIR$/JS-2.5H/8-object/object.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JS-2.5H/9-get-set/get-set.ts" beforeDir="false" afterPath="$PROJECT_DIR$/JS-2.5H/9-get-set/get-set.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,6 +66,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Public\JavaScript-1\JS-2.5H\15-async-await" />
       <recent name="C:\Users\Public\JavaScript-1\JS-2.5H\9-get-set" />
     </key>
   </component>
@@ -79,6 +92,7 @@
       <workItem from="1744190810141" duration="4709000" />
       <workItem from="1744362533732" duration="283000" />
       <workItem from="1747292079945" duration="1443000" />
+      <workItem from="1747384551207" duration="7722000" />
     </task>
     <task id="LOCAL-00001" summary=".">
       <option name="closed" value="true" />

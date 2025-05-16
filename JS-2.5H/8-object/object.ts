@@ -1,358 +1,232 @@
 // @ts-nocheck
-// ==============================================KONU-ANLATIMI=================================================//
+// ============================================== JAVASCRIPT OBJELER: ORTA SEVİYE REHBER ==============================================//
 
-// ========== TEMEL OBJE OLUŞTURMA ==========
-// Literal syntax ile obje oluşturma
-const product: any = {
+
+// ========== BÖLÜM 1: OBJE OLUŞTURMA (Literal Syntax ve Metotlar) ==========
+// Objeler, anahtar-değer çiftlerini saklar. {} ile hızlıca obje oluşturulur.
+// Özellikler ve metotlar (objenin içindeki fonksiyonlar) eklenebilir.
+
+const urun = {
     id: 1,
-    name: 'Bilgisayar',
-    price: 15000,
-    stock: 10,
-
-    // Metod tanımlama
-    discount(percent) {
-        this.price *= (1 - percent / 100);
-        return `%${percent} indirim uygulandı. Yeni fiyat: ${this.price}₺`;
+    isim: 'Ürün A',
+    fiyat: 100,
+    stok: 50,
+    // Metot: Objenin içinde tanımlı fonksiyon
+    indirimYap(yuzde) {
+        this.fiyat *= (1 - yuzde / 100); // 'this' objeyi işaret eder
+        return `%${yuzde} indirim yapıldı. Yeni fiyat: ${this.fiyat}₺`;
     }
 };
+console.log(urun.isim); // 'Ürün A'
+console.log(urun.indirimYap(20)); // '%20 indirim yapıldı. Yeni fiyat: 80₺'
 
-// CRUD Operasyonları
-// Create - Yeni özellik ekleme
-product.category = 'Elektronik';
+// 📌 Neden Önemli? Obje oluşturma, verileri organize etmenin temel yoludur. Metotlar, objeye özgü işlemleri tanımlar.
 
-// Read - Değer okuma
-console.log(product.name); // 'Bilgisayar'
+// ========== BÖLÜM 2: CRUD İŞLEMLERİ (Oluşturma, Okuma, Güncelleme, Silme) ==========
+// Objelerde Create, Read, Update, Delete işlemleri yapılabilir.
 
-// Update - Değer güncelleme
-product.price = 16750;
+urun.kategori = 'Elektronik'; // Create: Yeni özellik ekleme
+console.log(urun.kategori); // Read: Değer okuma -> 'Elektronik'
+urun.fiyat = 120; // Update: Değer güncelleme
+delete urun.stok; // Delete: Özellik silme
+console.log(urun); // {id: 1, isim: 'Ürün A', fiyat: 120, kategori: 'Elektronik'}
 
-// Delete - Özellik silme
-delete product.stock;
+// 📌 Neden Önemli? CRUD, obje verilerini yönetmenin temel yoludur.
 
-// ========== SPREAD & REST OPERATÖRLERİ ==========
+// ========== BÖLÜM 3: SPREAD & REST OPERATÖRLERİ ==========
+// Spread (...): Objenin özelliklerini kopyalar veya birleştirir.
+// Rest (...): Kalan özellikleri toplar.
 
-// Objeleri birleştirme (spread)
-const updatedProduct = {
-    ...product,               // Spread operatörü ile 'product' objesinin tüm özelliklerini 'updatedProduct' objesine alıyoruz
-    warranty: '2 Yıl',        // Yeni bir özellik ekliyoruz: warranty
-    price: 15549,             // 'price' özelliğini güncelliyoruz (mevcut özellik override ediliyor)
+const guncelUrun = {
+    ...urun, // Spread: urun'ün tüm özelliklerini kopyalar
+    garanti: '2 Yıl', // Yeni özellik
+    fiyat: 110 // Mevcut özelliği günceller
 };
+console.log(guncelUrun); // {id: 1, isim: 'Ürün A', fiyat: 110, kategori: 'Elektronik', garanti: '2 Yıl'}
 
-// Rest operatörü ile kalan özellikleri alma
-const {id, ...productInfo} = updatedProduct;  // 'id' özelliğini alıyoruz, geri kalanları 'productInfo' objesinde topluyoruz
-console.log(productInfo);  // 'productInfo' objesini yazdırıyoruz: {name: 'Bilgisayar', price: 15500, warranty: '2 Yıl'}
+const { id, ...kalanBilgiler } = guncelUrun; // Rest: id hariç diğer özellikler
+console.log(id); // 1
+console.log(kalanBilgiler); // {isim: 'Ürün A', fiyat: 110, kategori: 'Elektronik', garanti: '2 Yıl'}
 
+// 📌 Neden Önemli? Spread, objeleri kopyalamak/güncellemek için; Rest, özellik ayırmak için kullanışlıdır.
 
-// ========== DESTRUCTURING ==========
-// Objeden değer çıkarma
-const {name: productName, price} = product;
-console.log(productName, price); // 'Bilgisayar' 15500
+// ========== BÖLÜM 4: DESTRUCTURING (Yapı Çözümleme) ==========
+// Obje özelliklerini hızlıca değişkenlere ayırır.
 
-// Nested objelerde destructuring:
-// Destructuring, bir array ya da object içindeki verileri tek satırda değişkenlere ayırmanı sağlar.
-const company = {
-    name: 'Tech Corp',
-    address: {
-        city: 'İstanbul',
-        district: 'Kadıköy'
+const { isim: urunIsmi, fiyat } = urun;
+console.log(urunIsmi, fiyat); // 'Ürün A' 120
+
+// İç içe (nested) objelerde destructuring
+const sirket = {
+    isim: 'Tech A.Ş.',
+    adres: {
+        sehir: 'İstanbul',
+        ilce: 'Kadıköy'
     }
 };
-const {address: {city, district}} = company;
-console.log(city); // 'İstanbul'
+const { adres: { sehir, ilce } } = sirket;
+console.log(sehir, ilce); // 'İstanbul' 'Kadıköy'
 
-// ========== OBJE METOTLARI ==========
-// Object.keys() - Nesnenin anahtarlarını dizi olarak verir.
-const product = { id: 1, name: "Bilgisayar", price: 15000 };
-console.log(Object.keys(product)); // ["id", "name", "price"]
+// 📌 Neden Önemli? Destructuring, kodu sadeleştirir ve özelliklere hızlı erişim sağlar.
 
-// Object.values() - Nesnenin değerlerini dizi olarak döndürür.
-console.log(Object.values(product)); // [1, "Bilgisayar", 15000]
+// ========== BÖLÜM 5: OBJE METOTLARI ==========
+// JavaScript, objelerle çalışmak için yerleşik metotlar sunar.
 
-// Object.entries() - Anahtar-değer çiftlerini dizi içinde dizi olarak verir.
-console.log(Object.entries(product)); // [["id", 1], ["name", "Bilgisayar"], ["price", 15000]]
+// Object.keys(): Anahtarları dizi olarak döndürür
+console.log(Object.keys(urun)); // ['id', 'isim', 'fiyat', 'kategori']
 
-// Object.assign() - Nesneleri hedefe kopyalar, hedefi döndürür.
-const target = { a: 1 };
-const source = { b: 2, c: 3 };
-Object.assign(target, source);
-console.log(target); // { a: 1, b: 2, c: 3 }
-// target: kopyalanacak nesne, source: kopyalanan nesne. Aynı anahtar varsa son değer geçerli.
+// Object.values(): Değerleri dizi olarak döndürür
+console.log(Object.values(urun)); // [1, 'Ürün A', 120, 'Elektronik']
 
-// Object.fromEntries() - Dizi içindeki anahtar-değer çiftlerinden nesne oluşturur.
-const entries = [["a", 1], ["b", 2]];
-console.log(Object.fromEntries(entries)); // { a: 1, b: 2 }
+// Object.entries(): Anahtar-değer çiftlerini dizi içinde dizi olarak döndürür
+console.log(Object.entries(urun)); // [['id', 1], ['isim', 'Ürün A'], ['fiyat', 120], ['kategori', 'Elektronik']]
 
-// Object.create() - Prototip ile nesne oluşturur.
-const proto = { greet: () => "Merhaba" };
-const obj = Object.create(proto);
-console.log(obj.greet()); // "Merhaba"
+// Object.assign(): Objeleri bir hedefe kopyalar
+const hedef = { a: 1 };
+const kaynak = { b: 2, c: 3 };
+Object.assign(hedef, kaynak);
+console.log(hedef); // { a: 1, b: 2, c: 3 }
 
-// Object.defineProperty() - Özellik tanımlar ve kontrol eder.
-const newObj = {};
-Object.defineProperty(newObj, "key", {
+// Object.fromEntries(): Anahtar-değer dizisinden obje oluşturur
+const girisler = [['x', 10], ['y', 20]];
+console.log(Object.fromEntries(girisler)); // { x: 10, y: 20 }
+
+// Object.create(): Prototip ile obje oluşturur
+const prototip = { selam: () => 'Merhaba' };
+const yeniObje = Object.create(prototip);
+console.log(yeniObje.selam()); // 'Merhaba'
+
+// Object.defineProperty(): Özellik tanımlar ve kontrol eder
+const kilitliObje = {};
+Object.defineProperty(kilitliObje, 'anahtar', {
     value: 42,
     writable: false // Değiştirilemez
 });
-newObj.key = 100; // Çalışmaz
-console.log(newObj.key); // 42
+kilitliObje.anahtar = 100; // Çalışmaz
+console.log(kilitliObje.anahtar); // 42
 
-// Object.hasOwnProperty() - Özelliğin nesneye ait olup olmadığını kontrol eder.
-const checkObj = { a: 1 };
-console.log(checkObj.hasOwnProperty("a")); // true
-console.log(checkObj.hasOwnProperty("toString")); // false (prototipte)
+// Object.hasOwnProperty(): Özelliğin objeye ait olup olmadığını kontrol eder
+console.log(urun.hasOwnProperty('isim')); // true
+console.log(urun.hasOwnProperty('toString')); // false (prototipte)
 
-// Object.is() - İki değerin tam eşitliğini kontrol eder.
+// Object.is(): İki değerin tam eşitliğini kontrol eder
 console.log(Object.is(NaN, NaN)); // true
 console.log(Object.is(0, -0)); // false
 
-// Object.preventExtensions() - Yeni özellik eklenmesini engeller.
-const lockedObj = { a: 1 };
-Object.preventExtensions(lockedObj);
-lockedObj.b = 2; // Eklenmez
-lockedObj.a = 3; // Değişir
-console.log(lockedObj); // { a: 3 }
+// Object.preventExtensions(): Yeni özellik eklenmesini engeller
+const engellenmisObje = { x: 1 };
+Object.preventExtensions(engellenmisObje);
+engellenmisObje.y = 2; // Eklenmez
+engellenmisObje.x = 3; // Değişir
+console.log(engellenmisObje); // { x: 3 }
 
-// Object.getPrototypeOf() - Nesnenin prototipini döndürür.
-const protoCheck = {};
-console.log(Object.getPrototypeOf(protoCheck) === Object.prototype); // true
+// Object.getPrototypeOf(): Objenin prototipini döndürür
+const protoKontrol = {};
+console.log(Object.getPrototypeOf(protoKontrol) === Object.prototype); // true
 
-// ========== NESNE KİLİTLEME METOTLARI ==========
-const config = {apiUrl: 'https://api.example.com'};
+// 📌 Neden Önemli? Bu metotlar, objelerle esnek ve güçlü işlemler yapmayı sağlar.
 
-// Object.seal() - Yeni özellik eklenemez, mevcutlar değiştirilebilir
-// 🌐 Frontend'de global config ayarları
-const appConfig = {
-    theme: "dark",
-    language: "en"
-};
-Object.seal(appConfig);
+// ========== BÖLÜM 6: NESNE KİLİTLEME METOTLARI ==========
+// Objeleri korumak için kullanılır.
 
-// Mevcut olanı değiştirmek mümkün:
-appConfig.theme = "light"; // ✔️
+// Object.seal(): Yeni özellik eklenemez, mevcutlar değiştirilebilir
+const ayarlar = { tema: 'koyu', dil: 'tr' };
+Object.seal(ayarlar);
+ayarlar.tema = 'açık'; // Değişir
+ayarlar.yeni = 'test'; // Eklenmez
+delete ayarlar.dil; // Silinmez
+console.log(ayarlar); // { tema: 'açık', dil: 'tr' }
 
-// Yeni özellik eklemek yasak:
-appConfig.layout = "grid"; // ❌ YOK SAYILIR (strict moddaysan hata verir)
+// Object.freeze(): Obje tamamen dondurulur
+const sabitAyarlar = { renk: '#fff', arkaplan: '#000' };
+Object.freeze(sabitAyarlar);
+sabitAyarlar.renk = '#000'; // Değişmez
+sabitAyarlar.yeni = 'test'; // Eklenmez
+delete sabitAyarlar.arkaplan; // Silinmez
+console.log(sabitAyarlar); // { renk: '#fff', arkaplan: '#000' }
 
-// Özellik silmek de yasak:
-delete appConfig.language; // ❌ Çalışmaz
+// 📌 Neden Önemli? Sabit veriler için freeze, kısmi koruma için seal kullanılır.
 
-// Object.freeze() - Tamamen dondurma
-// Bir butonun sabit stilleri
-const buttonStyles = Object.freeze({
-    color: "#fff",
-    background: "#007bff",
-    borderRadius: "5px"
-});
+// ========== BÖLÜM 7: DİNAMİK ÖZELLİKLER ==========
+// Anahtarlar dinamik olarak oluşturulabilir veya eklenebilir.
 
-// Değiştirmeye çalışalım
-//buttonStyles.color = "#000";       // ❌ Değişmez
-buttonStyles.shadow = "2px";       // ❌ Eklenmez
-//delete buttonStyles.borderRadius;  // ❌ Silinmez
-
-// ========== DİNAMİK ÖZELLİKLER ==========
-// Computed property names
-const dynamicKey = 'status_' + Date.now();
-const order = {
+const dinamikAnahtar = 'durum_' + Date.now();
+const siparis = {
     id: 5,
-    [dynamicKey]: 'processing'
+    [dinamikAnahtar]: 'işleniyor'
 };
-console.log(order); // {id:5, status_1623...: 'processing'}
+console.log(siparis); // { id: 5, durum_...: 'işleniyor' }
 
-// Dinamik özellik ekleme/silme
-const propName = 'totalAmount';
-order[propName] = 2500;
-console.log(order.totalAmount); // 2500
+const ozellikAdi = 'toplamTutar';
+siparis[ozellikAdi] = 2500;
+console.log(siparis.toplamTutar); // 2500
 
-// ========== DERİN NESNE MANİPÜLASYONU ==========
-// Nested object update with spread
-const user = {
-    name: 'Ali',
-    preferences: {
-        theme: 'dark',
-        notifications: true
-    }
-};
+// 📌 Neden Önemli? Dinamik anahtarlar, esnek veri yapıları oluşturur.
 
-// Deep update
-const updatedUser = {
-    ...user,
-    preferences: {
-        ...user.preferences,
-        theme: 'light'
+// ========== BÖLÜM 8: DERİN NESNE MANİPÜLASYONU ==========
+// İç içe objeleri güncellemek için spread kullanılır.
+
+const kullanici = {
+    isim: 'Ali',
+    ayarlar: {
+        tema: 'koyu',
+        bildirim: true
     }
 };
 
-// ========== JSON İŞLEMLERİ ==========
-
-// JavaScript objesini JSON string'ine çevirir
-const productJSON = JSON.stringify(product);
-console.log('JSON:', productJSON);
-// Çıktı örneği: '{"name":"Kalem","price":10}'
-// JSON.stringify() metodu, objenin metodlarını (fonksiyonlarını) dahil etmez.
-
-// JSON string'ini tekrar bir JavaScript objesine çevirir
-const parsedProduct = JSON.parse(productJSON);
-console.log('Parsed:', parsedProduct);
-// Çıktı örneği: { name: "Kalem", price: 10 }
-// JSON.parse() metodu, string halindeki veriyi bir obje haline getirir.
-
-
-// ==============================================ÖRNEKLER=================================================//
-
-// ========== Örnek 1: PROTOKOL ve CLASS YAPISI ==========
-class Product {
-    constructor(name, price) {
-        this.name = name;
-        this.price = price;
+const guncelKullanici = {
+    ...kullanici,
+    ayarlar: {
+        ...kullanici.ayarlar,
+        tema: 'açık'
     }
+};
+console.log(guncelKullanici); // { isim: 'Ali', ayarlar: { tema: 'açık', bildirim: true } }
 
-    applyDiscount(percent) {
-        this.price *= (1 - percent / 100);
-    }
-}
-const laptop = new Product('Dizüstü Bilgisayar', 20000);
-laptop.applyDiscount(10);
-console.log(laptop.price); // 18000
+// 📌 Neden Önemli? Derin kopyalama ve güncelleme, karmaşık verilerde sık kullanılır.
 
+// ========== BÖLÜM 9: JSON İŞLEMLERİ ==========
+// Objeleri JSON string'ine ve geri çevirir.
 
+// Obje -> JSON
+const urunJSON = JSON.stringify(urun);
+console.log('JSON:', urunJSON); // '{"id":1,"isim":"Ürün A","fiyat":120,"kategori":"Elektronik"}'
 
-// ========== Örnek2: GERÇEK DÜNYA ÖRNEĞİ: SEPET YÖNETİMİ ==========
-const cartSystem = {
-    cart: [],
-    products: {
-        'P1': {name: 'Mouse', price: 250},
-        'P2': {name: 'Klavye', price: 500}
+// JSON -> Obje
+const parsedUrun = JSON.parse(urunJSON);
+console.log('Obje:', parsedUrun); // { id: 1, isim: 'Ürün A', fiyat: 120, kategori: 'Elektronik' }
+
+// 📌 Neden Önemli? JSON, veri alışverişi ve saklama için standart bir formattır.
+
+// ========== BÖLÜM 10: ÖRNEK UYGULAMA: VERİ YÖNETİMİ ==========
+const veriSistemi = {
+    veriler: [],
+    ekle(id, deger) {
+        this.veriler.push({ id, deger });
+        return `${deger} eklendi`;
     },
-
-    addToCart(productId, quantity = 1) {
-        if (!this.products[productId]) return 'Ürün bulunamadı';
-
-        const item = {
-            ...this.products[productId],
-            quantity,
-            total: this.products[productId].price * quantity
-        };
-
-        this.cart.push(item);
-        return `Sepete eklendi: ${quantity}x ${item.name}`;
+    sil(id) {
+        this.veriler = this.veriler.filter(item => item.id !== id);
+        return `ID ${id} silindi`;
     },
-
-    removeFromCart(productId) {
-        this.cart = this.cart.filter(item => item.id !== productId);
+    guncelle(id, yeniDeger) {
+        const veri = this.veriler.find(item => item.id === id);
+        if (veri) {
+            veri.deger = yeniDeger;
+            return `ID ${id} güncellendi`;
+        }
+        return 'Veri bulunamadı';
     },
-
-    calculateTotal() {
-        return this.cart.reduce((sum, item) => sum + item.total, 0);
+    listele() {
+        return this.veriler;
     }
 };
 
 // Kullanım
-cartSystem.addToCart('P1', 2);
-cartSystem.addToCart('P2');
-console.log('Toplam:', cartSystem.calculateTotal());
-console.log('Sepet:', cartSystem.cart);
+console.log(veriSistemi.ekle(1, 'Veri 1')); // 'Veri 1 eklendi'
+console.log(veriSistemi.ekle(2, 'Veri 2')); // 'Veri 2 eklendi'
+console.log(veriSistemi.guncelle(1, 'Güncel Veri')); // 'ID 1 güncellendi'
+console.log(veriSistemi.sil(2)); // 'ID 2 silindi'
+console.log(veriSistemi.listele()); // [{ id: 1, deger: 'Güncel Veri' }]
 
-
-
-
-
-//Örnek3: Object ve Sipariş Sistemi
-// 1️⃣ Menü Oluşturma (CREATE)
-const cafeMenu = {
-    kahve: 20,
-    cay: 10,
-    kek: 15,
-    sandvic: 25
-};
-console.log("Menü:", cafeMenu);
-
-// 2️⃣ Object Metodları (READ)
-console.log("Ürünler:", Object.keys(cafeMenu));
-console.log("Fiyatlar:", Object.values(cafeMenu));
-console.log("Çiftler:", Object.entries(cafeMenu));
-
-// 3️⃣ Spread & Rest Kullanımı
-const {kek, cay, ...kalanlar} = cafeMenu;
-console.log("Seçilen:", {kek, cay});
-console.log("Kalanlar:", kalanlar);
-
-// 4️⃣ Menü Kopyalama & Güncelleme (UPDATE)
-const newMenu = {...cafeMenu, su: 5, kahve: 22};
-console.log("Güncel Menü:", newMenu);
-
-// 5️⃣ Ürün Silme (DELETE)
-const silinmisMenu = {...cafeMenu};
-delete silinmisMenu.sandvic;
-console.log("Sandviçsiz Menü:", silinmisMenu);
-
-// 6️⃣ JSON.stringify / parse
-const str = JSON.stringify(cafeMenu);
-const backToObj = JSON.parse(str);
-console.log("JSON string:", str);
-console.log("Geri obje:", backToObj);
-
-// 7️⃣ Deep Copy
-const nestedMenu = {icecekler: {kahve: 20}, yiyecekler: {kek: 15}};
-const deepCopy = JSON.parse(JSON.stringify(nestedMenu));
-deepCopy.icecekler.kahve = 30;
-console.log("Orijinal:", nestedMenu);
-console.log("Deep Copy:", deepCopy);
-
-// 8️⃣ İndirimli Menü
-const discountedMenu = Object.fromEntries(
-    Object.entries(cafeMenu).map(([k, v]) => [k, v * 0.9])
-);
-console.log("İndirimli Menü:", discountedMenu);
-
-// 9️⃣ Sipariş Sistemi
-const cafeOrders = {
-    musteri1: {items: {kahve: 2, kek: 1}, time: "10:00"},
-    musteri2: {items: {cay: 3}, time: "10:05"}
-};
-
-// Siparişi formatla + fiyat hesapla
-const formatOrder = (items) =>
-    Object.entries(items).map(([k, v]) => `${k}: ${v} adet`).join(", ");
-const calculateTotal = (items, menu) =>
-    Object.entries(items).reduce((t, [k, v]) => t + (menu[k] || 0) * v, 0);
-
-console.log("Müşteri 1 siparişi:", formatOrder(cafeOrders.musteri1.items));
-console.log("Müşteri 1 toplam:", calculateTotal(cafeOrders.musteri1.items, cafeMenu));
-
-// Yeni sipariş + tüm toplam
-const allOrders = {
-    ...cafeOrders,
-    musteri3: {items: {sandvic: 1}, time: "10:10"}
-};
-const totalAll = Object.values(allOrders).reduce(
-    (acc, o) => acc + calculateTotal(o.items, cafeMenu),
-    0
-);
-console.log("Tüm Siparişler Toplamı:", totalAll);
-
-// 🔟 Kitapçı Sistemi (Kısa Versiyon)
-const bookCatalog = {
-    kitap1: {title: "JS", price: 50, category: "Programlama", stock: 10},
-    kitap2: {title: "Python", price: 40, category: "Programlama", stock: 5},
-    kitap3: {title: "Tarih", price: 30, category: "Tarih", stock: 0},
-    kitap4: {title: "Roman", price: 25, category: "Edebiyat", stock: 8}
-};
-const orders = {
-    user1: {items: {kitap1: 2, kitap4: 1}},
-    user2: {items: {kitap2: 1, kitap3: 1}}
-};
-const calculateBookTotal = (items, catalog) =>
-    Object.entries(items).reduce((t, [id, qty]) => t + (catalog[id]?.price || 0) * qty, 0);
-console.log("User1 toplam:", calculateBookTotal(orders.user1.items, bookCatalog));
-
-// İndirim + kategori ayırma
-const discountedCatalog = Object.fromEntries(
-    Object.entries(bookCatalog).map(([id, b]) => [id, {...b, price: b.price * 0.8}])
-);
-const {kitap1, kitap2, ...digerdir} = discountedCatalog;
-console.log("Programlama dışı kitap sayısı:", Object.keys(digerdir).length);
-//digerdir → kitap1 ve kitap2 dışındaki kitaplar demek.
-// Yani aslında: programlama dışı kitaplar.
-
-
-
+// 📌 Neden Önemli? Bu, objelerin pratik bir veri yönetim sisteminde nasıl kullanılabileceğini gösterir.

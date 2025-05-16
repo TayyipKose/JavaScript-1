@@ -41,7 +41,7 @@ numbers2.sort();  // Varsayılan sıralama (alfabetik sıralama)
 console.log(numbers2);  // Çıktı: [1, 2, 5, 8, 9]
 
 const numbers3 = [5, 2, 8, 1, 9];
-numbers3.sort((a, b) => a - b);  // Sayısal sıralama
+numbers3.sort((a, b) => a - b);  // Bu sort() metoduna bir karşılaştırma fonksiyonu veriyoruz:
 console.log(numbers3);  // Çıktı: [1, 2, 5, 8, 9]
 
 // 🔟 Array'i Ters Çevirme

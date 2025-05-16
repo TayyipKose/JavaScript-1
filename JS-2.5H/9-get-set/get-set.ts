@@ -1,186 +1,323 @@
 // @ts-nocheck
+// ============================================== TYPESCRIPT GETTER & SETTER: ORTA SEVİYE REHBER ==============================================//
 
-// Ürün tipi: Bir ürünün temel özelliklerini tanımlar
-interface Product {
+// Bu rehber, TypeScript'te getter ve setter kullanımını sade, temiz ve anlaşılır şekilde açıklıyor.
+// Orta seviye mülakat bilgisi için tasarlandı. Her bölüm bir kavramı öğretir, örneklerle pekiştirir.
+
+// ========== BÖLÜM 1: GETTER NEDİR? ==========
+// Getter, bir özelliğin değerini güvenli ve kontrollü şekilde okumak için kullanılır.
+// Normal bir özellik gibi erişilir, ama arka planda bir fonksiyon çalışır.
+
+interface Veri {
     id: string;
-    name: string;
-    price: number;
+    deger: string;
 }
 
-// Sepet öğesi: Bir ürün ve miktarını birleştirir
-interface CartItem {
-    product: Product;
-    quantity: number;
+class VeriYonetimi {
+    private _veriler: Veri[] = []; // Private: Dışarıdan doğrudan erişilemez
+
+    // Getter: Verilerin kopyasını döner, orijinal korunur
+    get veriler(): Veri[] {
+        return [...this._veriler]; // Spread ile kopya döner (immutability)
+    }
 }
 
-class SimpleCart {
-    // Private dizi: Sepet öğelerini tutar, dışarıdan doğrudan erişimi engeller
-    private _items: CartItem[] = [];
+// Örnek Kullanım
+const yonetim = new VeriYonetimi();
+console.log(yonetim.veriler); // [] (Boş dizi)
 
-    // Getter: Sepet içeriğini dışarıya güvenli bir kopya olarak döner
-    // Neden kopya? Orijinal dizi değiştirilmesin, veri bütünlüğü korunsun
-    get items(): CartItem[] {
-        return [...this._items];
+// 📌 Neden Önemli? Getter, veriyi korur ve sadece okuma sağlar. Kopya döndürmek, orijinal verinin değişmesini engeller.
+
+// ========== BÖLÜM 2: SETTER NEDİR? ==========
+// Setter, bir özelliği kontrollü şekilde güncellemek için kullanılır.
+// Atama gibi yazılır (`=`) ama doğrulama ve mantık içerir.
+
+class VeriYonetimi {
+    private _veriler: Veri[] = [];
+
+    get veriler(): Veri[] {
+        return [...this._veriler];
     }
 
-    // Setter: Sepete ürün ekler veya mevcut ürünün miktarını günceller
-    // Doğrulama: Negatif veya sıfır miktarı engeller
-    set addItem(newItem: CartItem) {
-        if (newItem.quantity <= 0) {
-            console.log(`Hata: ${newItem.product.name} için miktar 0 veya negatif olamaz!`);
+    // Setter: Yeni veri ekler, doğrulama yapar
+    set ekle(yeniVeri: Veri) {
+        if (!yeniVeri.id || !yeniVeri.deger) {
+            console.log("Hata: ID veya değer eksik!");
             return;
         }
+        this._veriler.push(yeniVeri);
+        console.log(`${yeniVeri.deger} eklendi.`);
+    }
+}
 
-        const index = this._items.findIndex(
-            (item) => item.product.id === newItem.product.id
-        );
+// Örnek Kullanım
+const yonetim2 = new VeriYonetimi();
+yonetim2.ekle = { id: "v1", deger: "Veri 1" }; // 'Veri 1 eklendi'
+yonetim2.ekle = { id: "", deger: "" }; // 'Hata: ID veya değer eksik!'
+console.log(yonetim2.veriler); // [{ id: "v1", deger: "Veri 1" }]
 
-        if (index >= 0) {
-            // Ürün zaten varsa, miktarı güncelle
-            this._items[index].quantity = newItem.quantity;
-            console.log(`${newItem.product.name} miktarı güncellendi: ${newItem.quantity}`);
-        } else {
-            // Yeni ürün ekle
-            this._items.push(newItem);
-            console.log(`${newItem.product.name} sepete eklendi: ${newItem.quantity}`);
+// 📌 Neden Önemli? Setter, veri eklerken kontrol sağlar (örn. eksik veri engelleme).
+
+// ========== BÖLÜM 3: KAPSÜLLEME (ENCAPSULATION) ==========
+// Private değişkenler (_veriler) dışarıdan erişimi engeller.
+// Getter ve setter ile kontrollü erişim sağlanır.
+
+class VeriYonetimi {
+    private _veriler: Veri[] = [];
+
+    get veriler(): Veri[] {
+        return [...this._veriler];
+    }
+
+    set ekle(yeniVeri: Veri) {
+        if (!yeniVeri.id || !yeniVeri.deger) {
+            console.log("Hata: ID veya değer eksik!");
+            return;
         }
+        this._veriler.push(yeniVeri);
+        console.log(`${yeniVeri.deger} eklendi.`);
     }
 
-    // Getter: Sepet toplam fiyatını dinamik olarak hesaplar
-    get totalPrice(): number {
-        return this._items.reduce((sum, item) => {
-            return sum + item.product.price * item.quantity;
-        }, 0);
+    // Getter: Toplam veri sayısını hesaplar
+    get veriSayisi(): number {
+        return this._veriler.length;
+    }
+}
+
+// Örnek Kullanım
+const yonetim3 = new VeriYonetimi();
+yonetim3.ekle = { id: "v1", deger: "Veri 1" };
+yonetim3.ekle = { id: "v2", deger: "Veri 2" };
+console.log(yonetim3.veriSayisi); // 2
+// yonetim3._veriler.push({ id: "v3", deger: "Hata" }); // Hata: _veriler private!
+
+// 📌 Neden Önemli? Kapsülleme, veri güvenliğini artırır ve yanlış kullanımı önler.
+
+// ========== BÖLÜM 4: SETTER İLE GÜNCELLEME VE DOĞRULAMA ==========
+// Setter’lar, mevcut verileri güncellerken de kullanılabilir.
+// Doğrulama ile hatalı güncellemeler engellenir.
+
+class VeriYonetimi {
+    private _veriler: Veri[] = [];
+
+    get veriler(): Veri[] {
+        return [...this._veriler];
     }
 
-    // Yeni Getter: Sepetteki toplam ürün sayısını döner
-    get totalItems(): number {
-        return this._items.reduce((sum, item) => sum + item.quantity, 0);
+    set ekle(yeniVeri: Veri) {
+        if (!yeniVeri.id || !yeniVeri.deger) {
+            console.log("Hata: ID veya değer eksik!");
+            return;
+        }
+        this._veriler.push(yeniVeri);
+        console.log(`${yeniVeri.deger} eklendi.`);
     }
 
-    // Yeni Setter: Belirli bir ürünün miktarını doğrudan günceller
-    set updateQuantity({ productId, quantity }: { productId: string; quantity: number }) {
-        const index = this._items.findIndex((item) => item.product.id === productId);
-
+    // Setter: Belirli bir veriyi günceller
+    set guncelle({ id, deger }: { id: string; deger: string }) {
+        const index = this._veriler.findIndex((veri) => veri.id === id);
         if (index < 0) {
-            console.log(`Hata: ID ${productId} olan ürün sepette bulunamadı!`);
+            console.log(`Hata: ID ${id} bulunamadı!`);
             return;
         }
-
-        if (quantity <= 0) {
-            // Miktar 0 veya negatifse, ürünü sepetten kaldır
-            const removedItem = this._items.splice(index, 1)[0];
-            console.log(`${removedItem.product.name} sepetten kaldırıldı.`);
-        } else {
-            // Miktarı güncelle
-            this._items[index].quantity = quantity;
-            console.log(`${this._items[index].product.name} miktarı güncellendi: ${quantity}`);
+        if (!deger) {
+            console.log("Hata: Yeni değer boş olamaz!");
+            return;
         }
-    }
-
-    // Sepetten ürün silme metodu (ekstra işlevsellik)
-    removeItem(productId: string): void {
-        const index = this._items.findIndex((item) => item.product.id === productId);
-        if (index >= 0) {
-            const removedItem = this._items.splice(index, 1)[0];
-            console.log(`${removedItem.product.name} sepetten kaldırıldı.`);
-        } else {
-            console.log(`Hata: ID ${productId} olan ürün sepette bulunamadı!`);
-        }
+        this._veriler[index].deger = deger;
+        console.log(`ID ${id} güncellendi: ${deger}`);
     }
 }
 
-// KULLANIM ÖRNEĞİ
+// Örnek Kullanım
+const yonetim4 = new VeriYonetimi();
+yonetim4.ekle = { id: "v1", deger: "Veri 1" };
+yonetim4.guncelle = { id: "v1", deger: "Güncel Veri" }; // 'ID v1 güncellendi: Güncel Veri'
+yonetim4.guncelle = { id: "v2", deger: "Veri 2" }; // 'Hata: ID v2 bulunamadı!'
+yonetim4.guncelle = { id: "v1", deger: "" }; // 'Hata: Yeni değer boş olamaz!'
+console.log(yonetim4.veriler); // [{ id: "v1", deger: "Güncel Veri" }]
 
-const cart = new SimpleCart();
+// 📌 Neden Önemli? Setter ile güncelleme, veri tutarlılığını korur ve hataları önler.
 
-const book: Product = { id: "b1", name: "Kitap", price: 100 };
-const pen: Product = { id: "p1", name: "Kalem", price: 20 };
+// ========== BÖLÜM 5: GETTER İLE HESAPLANAN DEĞERLER ==========
+// Getter’lar, dinamik hesaplamalar için kullanılır (örn. toplamlar).
 
-// 1. Sepete ürün ekleme
-cart.addItem = { product: book, quantity: 2 }; // Kitap sepete eklendi
-cart.addItem = { product: pen, quantity: 5 }; // Kalem sepete eklendi
+class VeriYonetimi {
+    private _veriler: Veri[] = [];
 
-// 2. Aynı ürünü güncelleme
-cart.addItem = { product: book, quantity: 3 }; // Kitap miktarı güncellendi
+    get veriler(): Veri[] {
+        return [...this._veriler];
+    }
 
-// 3. Hatalı giriş denemesi
-cart.addItem = { product: pen, quantity: -1 }; // Hata: Miktar negatif olamaz
+    set ekle(yeniVeri: Veri) {
+        if (!yeniVeri.id || !yeniVeri.deger) {
+            console.log("Hata: ID veya değer eksik!");
+            return;
+        }
+        this._veriler.push(yeniVeri);
+        console.log(`${yeniVeri.deger} eklendi.`);
+    }
 
-// 4. Sepet içeriğini görüntüleme
-console.log("Sepet içeriği:", cart.items);
-// Çıktı: [{ product: { id: "b1", name: "Kitap", price: 100 }, quantity: 3 },
-//         { product: { id: "p1", name: "Kalem", price: 20 }, quantity: 5 }]
+    // Getter: Verilerin uzunluk toplamını hesaplar
+    get toplamUzunluk(): number {
+        return this._veriler.reduce((sum, veri) => sum + veri.deger.length, 0);
+    }
+}
 
-// 5. Toplam fiyat ve ürün sayısını görüntüleme
-console.log("Toplam fiyat:", cart.totalPrice); // 3*100 + 5*20 = 400
-console.log("Toplam ürün sayısı:", cart.totalItems); // 3 + 5 = 8
+// Örnek Kullanım
+const yonetim5 = new VeriYonetimi();
+yonetim5.ekle = { id: "v1", deger: "Merhaba" }; // 7 harf
+yonetim5.ekle = { id: "v2", deger: "Dünya" }; // 5 harf
+console.log(yonetim5.toplamUzunluk); // 12 (Merhaba + Dünya)
 
-// 6. Miktar güncelleme
-cart.updateQuantity = { productId: "p1", quantity: 2 }; // Kalem miktarı güncellendi
-console.log("Yeni sepet:", cart.items);
+// 📌 Neden Önemli? Getter’lar, veriye dayalı dinamik hesaplamaları kolaylaştırır.
 
-// 7. Ürün silme
-cart.removeItem("b1"); // Kitap sepetten kaldırıldı
-console.log("Son sepet:", cart.items);
-console.log("Son toplam fiyat:", cart.totalPrice); // 2*20 = 40
+// ========== BÖLÜM 6: VERİ SİLME VE ARRAY METOTLARI ==========
+// Getter ve setter’larla birlikte array metotları (findIndex, splice) kullanılır.
 
-/**
- * BU ÖRNEK NEYİ GÖSTERİYOR?
- * -----------------------------
- * Bu örnek, TypeScript ile bir alışveriş sepeti uygulamasını modelleyerek
- * getter ve setter’ların nasıl çalıştığını öğretir. Gerçek hayattaki bir
- * e-ticaret sistemine benzer bir yapı sunar.
- *
- * ÖĞRENİLEN KAVRAMLAR
- * --------------------
- * 1. **Getter Kullanımı**
- *    - `items`: Sepet içeriğini güvenli bir şekilde dışarıya verir.
- *    - `totalPrice`: Sepet toplamını dinamik olarak hesaplar.
- *    - `totalItems`: Sepetteki toplam ürün sayısını döner.
- *    - Getter’lar, sadece okuma (read-only) işlemleri için idealdir.
- *
- * 2. **Setter Kullanımı**
- *    - `addItem`: Yeni ürün ekler veya mevcut ürünün miktarını günceller.
- *    - `updateQuantity`: Belirli bir ürünün miktarını doğrudan değiştirir.
- *    - Setter’lar, veri doğrulama ve kontrollü güncelleme için kullanılır.
- *
- * 3. **Encapsulation (Kapsülleme)**
- *    - `_items` private olduğu için dışarıdan doğrudan erişilemez.
- *    - Getter/setter’lar ile kontrollü erişim sağlanır.
- *
- * 4. **Doğrulama (Validation)**
- *    - Setter’larda negatif miktar gibi hatalı girdiler engellenir.
- *    - Kullanıcı dostu hata mesajları gösterilir.
- *
- * 5. **Immutability (Değişmezlik)**
- *    - `get items` ile orijinal dizi yerine kopya döner, böylece veri korunur.
- *
- * 6. **Array Methodları**
- *    - `findIndex`: Ürün aramada kullanılır.
- *    - `reduce`: Toplam fiyat ve ürün sayısı hesaplamada kullanılır.
- *    - `splice`: Ürün silmede kullanılır.
- *
- * YAYGIN HATALAR VE ÇÖZÜMLER
- * --------------------------
- * - **Hata**: Setter’ı metod gibi çağırmak (`cart.addItem({ product, quantity })`).
- *   **Çözüm**: Setter’lar atama ile çalışır: `cart.addItem = { product, quantity }`.
- * - **Hata**: Private `_items` dizisine doğrudan erişmeye çalışmak.
- *   **Çözüm**: `_items` yerine `cart.items` getter’ını kullan.
- * - **Hata**: Setter’da doğrulama yapmamak, hatalı verilere izin vermek.
- *   **Çözüm**: `addItem` ve `updateQuantity` gibi setter’larda kontrol ekle.
- *
- * TEKNİK AKIŞ
- * ------------
- * 1. `SimpleCart` sınıfı ile sepet nesnesi oluşturulur.
- * 2. Ürünler (`book`, `pen`) tanımlanır ve sepete eklenir.
- * 3. Setter’lar ile miktar güncellenir veya yeni ürün eklenir.
- * 4. Getter’lar ile sepet içeriği, toplam fiyat ve ürün sayısı görüntülenir.
- * 5. Ürün silme ve hata durumları işlenir.
- *
- * NOTLAR
- * -------
- * - Getter’lar sadece veri okumak için, setter’lar ise veri yazmak/güncellemek içindir.
- * - Setter’lar, normal metodlardan farklı olarak `=` operatörü ile çalışır.
- * - Bu yapı, gerçek dünyada e-ticaret sepeti gibi sistemlerde kullanılan temel bir modeldir.
- */
+class VeriYonetimi {
+    private _veriler: Veri[] = [];
+
+    get veriler(): Veri[] {
+        return [...this._veriler];
+    }
+
+    set ekle(yeniVeri: Veri) {
+        if (!yeniVeri.id || !yeniVeri.deger) {
+            console.log("Hata: ID veya değer eksik!");
+            return;
+        }
+        this._veriler.push(yeniVeri);
+        console.log(`${yeniVeri.deger} eklendi.`);
+    }
+
+    // Metot: Belirli bir veriyi siler
+    sil(id: string): void {
+        const index = this._veriler.findIndex((veri) => veri.id === id);
+        if (index < 0) {
+            console.log(`Hata: ID ${id} bulunamadı!`);
+            return;
+        }
+        const silinen = this._veriler.splice(index, 1)[0];
+        console.log(`${silinen.deger} silindi.`);
+    }
+}
+
+// Örnek Kullanım
+const yonetim6 = new VeriYonetimi();
+yonetim6.ekle = { id: "v1", deger: "Veri 1" };
+yonetim6.ekle = { id: "v2", deger: "Veri 2" };
+yonetim6.sil("v1"); // 'Veri 1 silindi'
+yonetim6.sil("v3"); // 'Hata: ID v3 bulunamadı!'
+console.log(yonetim6.veriler); // [{ id: "v2", deger: "Veri 2" }]
+
+// 📌 Neden Önemli? Array metotları, veri yönetimini güçlü ve esnek hale getirir.
+
+// ========== BÖLÜM 7: TAM UYGULAMA ÖRNEĞİ ==========
+// Tüm kavramları birleştiren bir veri yönetim sistemi.
+
+class VeriYonetimi {
+    private _veriler: Veri[] = [];
+
+    // Getter: Verilerin kopyasını döner
+    get veriler(): Veri[] {
+        return [...this._veriler];
+    }
+
+    // Getter: Toplam veri sayısını döner
+    get veriSayisi(): number {
+        return this._veriler.length;
+    }
+
+    // Getter: Tüm değerlerin uzunluk toplamını döner
+    get toplamUzunluk(): number {
+        return this._veriler.reduce((sum, veri) => sum + veri.deger.length, 0);
+    }
+
+    // Setter: Yeni veri ekler
+    set ekle(yeniVeri: Veri) {
+        if (!yeniVeri.id || !yeniVeri.deger) {
+            console.log("Hata: ID veya değer eksik!");
+            return;
+        }
+        const index = this._veriler.findIndex((veri) => veri.id === yeniVeri.id);
+        if (index >= 0) {
+            this._veriler[index].deger = yeniVeri.deger;
+            console.log(`${yeniVeri.deger} güncellendi.`);
+        } else {
+            this._veriler.push(yeniVeri);
+            console.log(`${yeniVeri.deger} eklendi.`);
+        }
+    }
+
+    // Setter: Veriyi günceller
+    set guncelle({ id, deger }: { id: string; deger: string }) {
+        const index = this._veriler.findIndex((veri) => veri.id === id);
+        if (index < 0) {
+            console.log(`Hata: ID ${id} bulunamadı!`);
+            return;
+        }
+        if (!deger) {
+            console.log("Hata: Yeni değer boş olamaz!");
+            return;
+        }
+        this._veriler[index].deger = deger;
+        console.log(`ID ${id} güncellendi: ${deger}`);
+    }
+
+    // Metot: Veriyi siler
+    sil(id: string): void {
+        const index = this._veriler.findIndex((veri) => veri.id === id);
+        if (index < 0) {
+            console.log(`Hata: ID ${id} bulunamadı!`);
+            return;
+        }
+        const silinen = this._veriler.splice(index, 1)[0];
+        console.log(`${silinen.deger} silindi.`);
+    }
+}
+
+// Örnek Kullanım
+const yonetim7 = new VeriYonetimi();
+yonetim7.ekle = { id: "v1", deger: "Merhaba" }; // 'Merhaba eklendi'
+yonetim7.ekle = { id: "v2", deger: "Dünya" }; // 'Dünya eklendi'
+yonetim7.guncelle = { id: "v1", deger: "Selam" }; // 'ID v1 güncellendi: Selam'
+yonetim7.sil("v2"); // 'Dünya silindi'
+console.log("Veriler:", yonetim7.veriler); // [{ id: "v1", deger: "Selam" }]
+console.log("Veri sayısı:", yonetim7.veriSayisi); // 1
+console.log("Toplam uzunluk:", yonetim7.toplamUzunluk); // 5 (Selam)
+
+// 📌 Neden Önemli? Bu yapı, getter/setter’ların gerçek dünyada veri yönetiminde nasıl kullanıldığını gösterir.
+
+// ========== NOTLAR VE MÜLAKAT İPUÇLARI ==========
+// ÖĞRENİLEN KAVRAMLAR
+// --------------------
+// 1. **Getter**: Veriyi okumak için (örn. `veriler`, `veriSayisi`). Dinamik hesaplamalar için ideal.
+// 2. **Setter**: Veriyi güncellemek için (örn. `ekle`, `guncelle`). Doğrulama ile güvenli.
+// 3. **Kapsülleme**: Private değişkenler (`_veriler`) ile veri korunur.
+// 4. **Immutability**: Getter’larda kopya döndürmek (`[..._veriler]`) veriyi korur.
+// 5. **Doğrulama**: Setter’larda hatalı girdiler engellenir (örn. boş değer).
+// 6. **Array Metotları**: `findIndex`, `reduce`, `splice` veri yönetiminde sık kullanılır.
+
+// YAYGIN MÜLAKAT SORULARI
+// -----------------------
+// - Getter ve setter arasındaki fark nedir? (Getter okur, setter yazar.)
+// - Neden private değişken kullanırız? (Veri güvenliği ve kontrol için.)
+// - Setter’da doğrulama nasıl yapılır? (Koşullarla, örneğin `if (!deger)`.)
+// - Immutability neden önemlidir? (Verinin yanlışlıkla değişmesini önler.)
+
+// YAYGIN HATALAR VE ÇÖZÜMLER
+// --------------------------
+// - **Hata**: Setter’ı fonksiyon gibi çağırmak (`yonetim.ekle({ id, deger })`).
+//   **Çözüm**: Setter’lar atama ile çalışır: `yonetim.ekle = { id, deger }`.
+// - **Hata**: Getter’da orijinal veriyi döndürmek.
+//   **Çözüm**: Kopya dön (`[..._veriler]`).
+// - **Hata**: Doğrulama yapmadan setter yazmak.
+//   **Çözüm**: Her setter’da kontrol ekle (örn. `if (!id)`).
+
+// MÜLAKAT İÇİN PRATİK İPUÇLARI
+// ----------------------------
+// - Getter/setter’ların gerçek dünyada veri yönetimi, form doğrulama veya sepet sistemlerinde kullanıldığını belirt.
+// - Kapsüllemenin veri güvenliğini nasıl sağladığını açıkla.
+// - Basit bir getter/setter örneği kodlayarak göster (yukarıdaki gibi).
+// - `reduce` veya `findIndex` gibi array metotlarını nasıl kullandığını anlat.
