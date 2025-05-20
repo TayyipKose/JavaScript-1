@@ -36,11 +36,11 @@ function processData(data: number, callback: (result: number) => void): void {
     callback(islenmisVeri);
 }
 
-processData(10, printResult); // Çıktı: Sonuç: 20
-
 function printResult(result: number): void {
     console.log("Sonuç:", result);
 }
+
+processData(10, printResult); // Çıktı: Sonuç: 20
 
 
 // 6️⃣ Fonksiyon Döndüren Fonksiyon (Higher Order Function)
