@@ -56,12 +56,8 @@ console.log("Toplam:", toplam(1, 2, 3, 4)); // 10
 console.log("Toplam:", toplam(5, 10)); // 15
 
 // Örnek 2: Destructuring ile rest (Gerçek Hayat: Veri ayrıştırma)
-interface Kullanici {
-    id: string;
-    ad: string;
-    puan: number;
-}
-const kullanici: Kullanici = { id: "u1", ad: "Ali", puan: 90 };
+
+const kullanici: any = { id: "u1", ad: "Ali", puan: 90 };
 const { id, ...kalan } = kullanici;
 console.log("ID:", id, "Kalan:", kalan);
 // Çıktı: ID: u1, Kalan: { ad: "Ali", puan: 90 }
@@ -78,12 +74,8 @@ console.log("İlk:", ilk, "Diğer:", digerNotlar);
 // ===== BÖLÜM 3: GERÇEK HAYAT UYGULAMASI =====
 // Spread ve rest ile veri işleme (Gerçek Hayat: Proje yönetimi).
 
-interface Proje {
-    id: string;
-    tamam: boolean;
-    detaylar: { ad: string; oncelik: number };
-}
-const projeler: Proje[] = [
+
+const projeler: any[] = [
     { id: "p1", tamam: false, detaylar: { ad: "Web", oncelik: 3 } },
     { id: "p2", tamam: true, detaylar: { ad: "App", oncelik: 1 } }
 ];
