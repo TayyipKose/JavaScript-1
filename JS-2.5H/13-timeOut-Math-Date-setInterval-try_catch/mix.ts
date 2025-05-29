@@ -92,59 +92,6 @@ const intervalId = setInterval(() => {
 // 📌 Neden Önemli? Canlı veriler ve periyodik görevler için ideal.
 // 📌 Mülakat İpucu: “setInterval ile dashboard’u güncellerim.”
 
-// ===== BÖLÜM 5: GERÇEK HAYAT UYGULAMASI =====
-// Hepsinin bir arada kullanımı (Gerçek Hayat: Proje yönetim sistemi).
-
-interface ProjeYonetim {
-    id: string;
-    ad: string;
-    baslangic: Date;
-    ilerleme: number;
-}
-
-const projeYonetim: ProjeYonetim = {
-    id: projeIdUret(),
-    ad: "Web App",
-    baslangic: new Date(),
-    ilerleme: 0
-};
-
-// Proje durumu güncelleme ve bildirim
-setTimeout(() => {
-    const interval = setInterval(() => {
-        projeYonetim.ilerleme = Math.min(projeYonetim.ilerleme + Math.floor(Math.random() * 20), 100);
-        const zamanFarki = Math.floor((new Date().getTime() - projeYonetim.baslangic.getTime()) / 1000);
-        console.log(`${projeYonetim.ad} (${projeYonetim.id}): ${projeYonetim.ilerleme}% (${zamanFarki}s geçti)`);
-        if (projeYonetim.ilerleme === 100) {
-            clearInterval(interval);
-            console.log("Proje tamamlandı!");
-        }
-    }, 2000);
-}, 1000); // 1s sonra başla, her 2s’de güncelle
-
-// 📌 Neden Önemli? setTimeout, Math, Date ve setInterval, dinamik sistemlerde sık kullanılır.
-// 📌 Mülakat İpucu: “Proje ilerlemesini setInterval ve Date ile takip ettim.”
-
-
-// ===== BÖLÜM 6: TRY - CATCH - FINALLY =====
-// try, catch, finally yapısı, hataları yakalamak ve yönetmek için kullanılır.
-// Arka Plan: Beklenmeyen hataları engellemek, sistemi çökertmeden yönetmek için şarttır.
-
-function veriGetir(): string {
-    const hataVar = Math.random() > 0.5;
-    if (hataVar) throw new Error("API bağlantı hatası!");
-    return "Kullanıcı verisi";
-}
-
-try {
-    const veri = veriGetir();
-    console.log("Gelen veri:", veri);
-} catch (error) {
-    console.error("Bir hata oluştu:", error.message);
-} finally {
-    console.log("Veri çekme işlemi tamamlandı.");
-}
-
 
 // ===== NOTLAR VE MÜLAKAT İPUÇLARI =====
 // ÖĞRENİLENLER:
