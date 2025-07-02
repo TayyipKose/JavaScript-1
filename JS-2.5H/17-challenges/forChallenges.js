@@ -20,19 +20,36 @@ class ForChallenges {
         console.log("Toplam: " + toplam, "Girilen sayı adedi", sayac);
     }
 
-    soru2(){
+    soru2() {
         //kullanıcının girdiği sayıyı 1'e kadar azalt
         let input = prompt("Bir sayı girinizz:");
         if (input === null);
         let sayi = parseInt(input);
-        if(sayi == NaN){
+        if (sayi == NaN) {
             return
         }
-        for (let i =0; i<=sayi; i--){
-            if(sayi>0){
+        for (let i = 0; i <= sayi; i--) {
+            if (sayi > 0) {
                 console.log(sayi);
-                sayi = sayi -1;
+                sayi = sayi - 1;
             }
         }
+    }
+}
+
+
+
+export class Ornek {
+    isimYazdır(isim) {
+     return console.log("Hoşgeldiniz " + isim);
+    }
+}
+
+export class Process {
+    isim;
+    constructor() {
+        const o1 = new Ornek();
+        this.isim = o1.isimYazdır("okan buruk");
+
     }
 }

@@ -4,17 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3cf7c7c8-0f07-48eb-bf23-222adc546dd9" name="Changes" comment="...">
-      <change afterPath="$PROJECT_DIR$/.idea/JavaScript-1.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/git_toolbox_blame.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/git_toolbox_prj.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/JS-2.5H/17-challenges/forChallenge.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/JS-2.5H/17-challenges/forChallenges.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/JS-2.5H/mix/whatsapp-clone-js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="3cf7c7c8-0f07-48eb-bf23-222adc546dd9" name="Changes" comment="basic-wp-clone" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -68,7 +58,7 @@
       <updated>1748528135758</updated>
       <workItem from="1748528136866" duration="2257000" />
       <workItem from="1750680782193" duration="325000" />
-      <workItem from="1751030244029" duration="49000" />
+      <workItem from="1751030244029" duration="78000" />
     </task>
     <task id="LOCAL-00001" summary="...">
       <option name="closed" value="true" />
@@ -78,7 +68,15 @@
       <option name="project" value="LOCAL" />
       <updated>1748528229495</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="basic-wp-clone">
+      <option name="closed" value="true" />
+      <created>1751030314450</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1751030314450</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -86,6 +84,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="..." />
-    <option name="LAST_COMMIT_MESSAGE" value="..." />
+    <MESSAGE value="basic-wp-clone" />
+    <option name="LAST_COMMIT_MESSAGE" value="basic-wp-clone" />
   </component>
 </project>
