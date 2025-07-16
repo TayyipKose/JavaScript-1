@@ -58,15 +58,6 @@ console.log(_numbers.slice(0, 5));  // Çıktı: [11, 12, 13, 14, 15]
 // Son 4 Elemanı Alma
 console.log(_numbers.slice(-4));  // Çıktı: [16, 17, 18, 19]
 
-// İlk 3 Elemanı Alma
-console.log(_numbers.slice(0, 3));  // Çıktı: [11, 12, 13]
-
-// Ortadaki Elemanları Alma
-console.log(_numbers.slice(3, 6));  // Çıktı: [14, 15, 16]
-
-// **Bonus**: Son 3 Elemanı, İlk 5'e Dahil Etmeden Alma
-console.log(_numbers.slice(5, 8));  // Çıktı: [16, 17, 18]
-
 /*
 Notlar
 slice(start, end): Array'den belirtilen başlangıç ve bitiş indeksleri arasındaki elemanları alır. Bitiş indeksi dahil edilmez!
@@ -78,5 +69,4 @@ push(element): Array'in sonuna yeni bir eleman ekler.
 pop(): Array'in son elemanını çıkarır ve döner.
 shift(): Array'in ilk elemanını çıkarır ve döner.
 unshift(element): Array'in başına yeni bir eleman ekler.
-
 */

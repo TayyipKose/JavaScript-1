@@ -42,8 +42,8 @@ console.log(arabam.bilgi()); // Çıktı: Bu bir Kırmızı araba
 console.log(arabam.gazaBas()); // Çıktı: Vın! Hız: 10 km/s
 console.log(arabam.frenYap()); // Çıktı: Durduk! Hız: 0 km/s
 
-// 📌 Mantık: Araba bir nesne. Renk ve hız gizli (private), metotlarla kontrol edilir (encapsulation).
-// 📌 Mülakat İpucu: “Private ile veriyi korurum, metotlarla erişim sağlarım.”
+//  Mantık: Araba bir nesne. Renk ve hız gizli (private), metotlarla kontrol edilir (encapsulation).
+//  Mülakat İpucu: “Private ile veriyi korurum, metotlarla erişim sağlarım.”
 
 // ===== BÖLÜM 2: INHERITANCE (MİRAS) =====
 // Bir sınıf, başka bir sınıfın özelliklerini alabilir. Mesela spor araba da bir arabadır.
