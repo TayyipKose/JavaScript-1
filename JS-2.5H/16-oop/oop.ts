@@ -4,165 +4,99 @@
 
 // ===== BÖLÜM 1: OOP NEDİR? =====
 // OOP, kodunu "nesneler" gibi düşünmektir. Mesela bir araba: tekerlekleri, motoru, rengi var (özellikler), gaza basar, fren yapar (davranışlar).
-// 4 temel fikir:
-// 1. Encapsulation: Veriyi sakla, sadece izin verdiğin şekilde kullan.
-// 2. Inheritance: Bir şey başka bir şeyden özellik alır (baba-oğul gibi).
-// 3. Polymorphism: Aynı şey farklı şekillerde çalışır.
-// 4. Abstraction: Karmaşık şeyleri basit göster.
+// 4 temel kavram:
+// 1. Encapsulation: Veriyi koru, sadece izin verilen metotlarla erişim sağla.
+// 2. Inheritance: Bir sınıf başka sınıfın özelliklerini miras alır.
+// 3. Polymorphism: Aynı isimde metotlar farklı davranabilir.
+// 4. Abstraction: Karmaşık detayları gizle, sadece önemli kısmı göster.
 
-// Örnek 1: Araba (Gerçek Hayat: Basit Sınıf)
-class Araba {
-    // Özellikler (veriler)
-    private renk: string; // Sadece bu sınıf görür
-    private hiz: number = 0;
 
-    // Constructor: Arabayı yaratırken ilk ayarlar
-    constructor(renk: string) {
-        this.renk = renk;
+// ===== BÖLÜM 1: ENCAPSULATION =====
+class Cihaz {
+    private acik: boolean = false;
+
+    constructor(private isim: string) {}
+
+    public ac(): void {
+        this.acik = true;
+        console.log(`${this.isim} açıldı.`);
     }
 
-    // Davranışlar (metotlar)
-    public gazaBas(): string {
-        this.hiz += 10;
-        return `Vın! Hız: ${this.hiz} km/s`;
+    public kapa(): void {
+        this.acik = false;
+        console.log(`${this.isim} kapandı.`);
     }
 
-    public frenYap(): string {
-        this.hiz = 0;
-        return `Durduk! Hız: ${this.hiz} km/s`;
-    }
-
-    public bilgi(): string {
-        return `Bu bir ${this.renk} araba`;
+    public durum(): string {
+        return `${this.isim} şu an ${this.acik ? "açık" : "kapalı"}`;
     }
 }
 
-const arabam = new Araba("Kırmızı");
-console.log(arabam.bilgi()); // Çıktı: Bu bir Kırmızı araba
-console.log(arabam.gazaBas()); // Çıktı: Vın! Hız: 10 km/s
-console.log(arabam.frenYap()); // Çıktı: Durduk! Hız: 0 km/s
+const lamba = new Cihaz("Salon Lambası");
+lamba.ac();
+console.log(lamba.durum());
+lamba.kapa();
 
-//  Mantık: Araba bir nesne. Renk ve hız gizli (private), metotlarla kontrol edilir (encapsulation).
-//  Mülakat İpucu: “Private ile veriyi korurum, metotlarla erişim sağlarım.”
+// ===== BÖLÜM 2: INHERITANCE =====
+class AkilliLamba extends Cihaz {
+    private parlaklik: number = 50; // 0-100
 
-// ===== BÖLÜM 2: INHERITANCE (MİRAS) =====
-// Bir sınıf, başka bir sınıfın özelliklerini alabilir. Mesela spor araba da bir arabadır.
-
-// Örnek: Spor Araba
-class SporAraba extends Araba {
-    private turbo: boolean;
-
-    constructor(renk: string, turbo: boolean) {
-        super(renk); // Üst sınıfın (Araba) constructor’ını çağır
-        this.turbo = turbo;
+    constructor(isim: string) {
+        super(isim);
     }
 
-    // Yeni metot
-    public turboAc(): string {
-        if (this.turbo) return "Turbo açık, uçuyoruz!";
-        return "Turbo yok!";
+    public parlaklikAyarla(deger: number): void {
+        this.parlaklik = Math.min(100, Math.max(0, deger));
+        console.log(`${this.isim} parlaklık ${this.parlaklik} seviyesine ayarlandı.`);
     }
 }
 
-const sporArabam = new SporAraba("Mavi", true);
-console.log(sporArabam.bilgi()); // Çıktı: Bu bir Mavi araba
-console.log(sporArabam.turboAc()); // Çıktı: Turbo açık, uçuyoruz!
+const salonLambasi = new AkilliLamba("Salon Akıllı Lambası");
+salonLambasi.ac();
+salonLambasi.parlaklikAyarla(80);
+console.log(salonLambasi.durum());
 
-// 📌 Mantık: SporAraba, Araba’nın özelliklerini aldı (inheritance). Yeni şeyler ekledi (turbo).
-// 📌 Mülakat İpucu: “Extends ile miras alır, super ile üst sınıfı çağırırım.”
+// ===== BÖLÜM 3: POLYMORPHISM =====
+class Klima extends Cihaz {
+    private sicaklik: number = 24;
 
-// ===== BÖLÜM 3: POLYMORPHISM (ÇOK BİÇİMLİLİK) =====
-// Aynı metot, farklı sınıflarda farklı çalışır.
-
-// Örnek: Farklı Araçlar
-class Kamyon extends Araba {
-    constructor(renk: string) {
-        super(renk);
+    constructor(isim: string) {
+        super(isim);
     }
 
-    // Aynı metot, farklı iş
-    public gazaBas(): string {
-        return `Ağır ağır gidiyoruz! Hız: 5 km/s`;
+    // Override etme: klima açılırken ek bilgi verelim
+    public ac(): void {
+        super.ac();
+        console.log(`${this.isim} ${this.sicaklik} dereceye ayarlanıyor.`);
     }
-}
 
-const kamyonum = new Kamyon("Siyah");
-console.log(kamyonum.gazaBas()); // Çıktı: Ağır ağır gidiyoruz! Hız: 5 km/s
-console.log(sporArabam.gazaBas()); // Çıktı: Vın! Hız: 10 km/s
-
-// 📌 Mantık: Aynı metot (gazaBas), farklı sınıflarda farklı çalıştı (polymorphism).
-// 📌 Mülakat İpucu: “Metodu override ederek farklı davranışlar tanımlarım.”
-
-// ===== BÖLÜM 4: ABSTRACTION (SOYUTLAMA) =====
-// Detayları gizle, sadece gerekli şeyi göster. Interface ile yapalım.
-
-// Örnek: Hayvanlar
-interface Hayvan {
-    sesCikar(): string; // Her hayvan bunu yapmalı
-}
-
-class Kopek implements Hayvan {
-    public sesCikar(): string {
-        return "Hav hav!";
+    public sicaklikAyarla(deger: number): void {
+        this.sicaklik = deger;
+        console.log(`${this.isim} sıcaklık ${this.sicaklik} dereceye ayarlandı.`);
     }
 }
 
-class Kedi implements Hayvan {
-    public sesCikar(): string {
-        return "Miyav!";
-    }
+const salonKlima = new Klima("Salon Klima");
+salonKlima.ac();
+salonKlima.sicaklikAyarla(22);
+console.log(salonKlima.durum());
+
+// ===== BÖLÜM 4: ABSTRACTION =====
+interface AkilliCihaz {
+    ac(): void;
+    kapa(): void;
+    durum(): string;
 }
 
-const kopek = new Kopek();
-const kedi = new Kedi();
-console.log(kopek.sesCikar()); // Çıktı: Hav hav!
-console.log(kedi.sesCikar()); // Çıktı: Miyav!
-
-// 📌 Mantık: Interface, sınıfların ne yapacağını söyler, nasıl yaptığını gizler (abstraction).
-// 📌 Mülakat İpucu: “Interface ile sözleşme tanımlar, detayları sınıflara bırakırım.”
-
-// ===== BÖLÜM 5: GERÇEK HAYAT ÖRNEĞİ =====
-// Basit bir sepet sistemi (E-ticaret)
-class Urun {
-    private ad: string;
-    private fiyat: number;
-
-    constructor(ad: string, fiyat: number) {
-        this.ad = ad;
-        this.fiyat = fiyat;
-    }
-
-    public bilgi(): string {
-        return `${this.ad}: ${this.fiyat} TL`;
-    }
+function cihazDurumuYazdir(cihaz: AkilliCihaz) {
+    console.log(cihaz.durum());
 }
 
-class Sepet {
-    private urunler: Urun[] = [];
+cihazDurumuYazdir(salonLambasi);
+cihazDurumuYazdir(salonKlima);
 
-    public urunEkle(urun: Urun): void {
-        this.urunler.push(urun);
-    }
-
-    public toplamFiyat(): number {
-        let toplam = 0;
-        for (const urun of this.urunler) {
-            toplam += urun.fiyat;
-        }
-        return toplam;
-    }
-}
-
-const sepet = new Sepet();
-sepet.urunEkle(new Urun("Telefon", 1000));
-sepet.urunEkle(new Urun("Kulaklık", 200));
-console.log(sepet.toplamFiyat()); // Çıktı: 1200 TL
-
-// 📌 Mantık: Urun ve Sepet nesneleri, encapsulation (private) ve basit döngü kullanıyor.
-// 📌 Mülakat İpucu: “OOP ile modüler sistem kurar, veriyi private tutarım.”
-
-// ===== NOTLAR =====
-// - Private: Sadece sınıfın içinde kullanılır.
-// - Constructor: Nesneyi yaratırken çalışır.
-// - Extends: Miras almak için.
-// - Interface: Ne yapılacağını söyler, nasıl yapılacağını değil.
+// ===== ÖZET =====
+// • Encapsulation: Cihaz iç durumu gizli, sadece metodlarla kontrol edilir.
+// • Inheritance: Akıllı lamba ve klima Cihaz’dan miras aldı, yeni özellikler ekledi.
+// • Polymorphism: Klima ac() metodunu kendine göre değiştirdi (override).
+// • Abstraction: AkilliCihaz interface ile ne yapacakları belli, nasıl yapılacağı detaylarda.
