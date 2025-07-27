@@ -1,99 +1,98 @@
 // @ts-nocheck
-// ========================= TYPESCRIPT FOREACH DÖNGÜSÜ: ORTA SEVIYE REHBER =========================//
+// ================ TEMEL forEach KULLANIMI ================
 
-// Bu rehber, TypeScript’te forEach döngüsünü sade ve pratik şekilde öğretir.
-// Orta seviye TS geliştiricisi için array’ler ve objelerle örnekler içerir.
+// 1. Basit Dizi İşleme
+const sayilar = [1, 2, 3];
+sayilar.forEach(sayi => console.log(sayi * 2)); // Çıktı: 2, 4, 6
 
-// ===== BÖLÜM 1: FOREACH NEDİR? =====
-// forEach, array’in her elemanı için bir fonksiyon çalıştırır.
-// Sözdizimi: array.forEach((eleman, indeks) => { ... })
-// Arka Plan: Array metodu, dönüş değeri yoktur (undefined).
-
-const sayilar: number[] = [10, 20, 30];
-sayilar.forEach((sayi: number, indeks: number) => {
-    console.log(`Indeks ${indeks}: ${sayi}`);
-});
-// Çıktı: Indeks 0: 10, Indeks 1: 20, Indeks 2: 30
-
-// 📌 Neden Önemli? forEach, array işleme için modern ve okunabilir.
-// 📌 Mülakat İpucu: “Yan etkiler için forEach kullanıyorum.”
-
-// ===== BÖLÜM 2: ARRAY’LERLE FOREACH =====
-// Veri güncelleme ve raporlama için kullanılır.
-
-interface Kullanici {
-    id: string;
-    ad: string;
-    puan: number;
-}
-
-const kullanicilar: Kullanici[] = [
-    { id: "u1", ad: "Ali", puan: 85 },
-    { id: "u2", ad: "Ayşe", puan: 90 }
+// 2. Nesne Dizileri ve any Kullanımı
+const kullanicilar: any[] = [
+  { id: 1, ad: "Ali", puan: 70 },
+  { id: 2, ad: "Ayşe", puan: 85 }
 ];
 
-// Örnek 1: Puan güncelleme
-kullanicilar.forEach((k: Kullanici) => {
-    k.puan += 5;
+// 2.1 Nesne Güncelleme
+kullanicilar.forEach(k => k.puan += 5);
+console.log(kullanicilar); // Puanlar 5 artar
+
+// 2.2 Filtreleme Benzeri İşlem
+const basarililar: string[] = [];
+kullanicilar.forEach(k => k.puan > 75 && basarililar.push(k.ad));
+console.log(basarililar); // Çıktı: ["Ayşe"]
+
+// 3. Index ve Dizi Kullanımı
+['a', 'b', 'c'].forEach((harf, index) => 
+  console.log(`${index}. harf: ${harf}`)
+);
+
+// 4. Object.entries ile Nesne İterasyonu
+const kisi = { ad: "Ali", yas: 30, meslek: "Mühendis" };
+Object.entries(kisi).forEach(([anahtar, deger]) => 
+  console.log(`${anahtar}: ${deger}`)
+);
+
+// ================ ÖNEMLİ UYARILAR ================
+// 5. Return Kullanımı (Döngüyü durdurmaz)
+[1, 2, 3, 4].forEach(num => {
+  if (num === 3) return; // Sadece 3 atlanır
+  console.log(num); // Çıktı: 1, 2, 4
 });
-console.log("Puanlar:", kullanicilar);
-// Çıktı: [{ id: "u1", ad: "Ali", puan: 90 }, { id: "u2", ad: "Ayşe", puan: 95 }]
 
-// Örnek 2: Rapor oluşturma
-const rapor: string[] = [];
-kullanicilar.forEach((k: Kullanici) => {
-    rapor.push(`${k.ad}: ${k.puan}`);
-});
-console.log("Rapor:", rapor);
-// Çıktı: ["Ali: 90", "Ayşe: 95"]
+// 6. Hatalı Kullanım Örnekleri
+// 6.1 Break kullanılamaz
+// sayilar.forEach(num => { if (num === 2) break; }); // HATA!
 
-// ===== BÖLÜM 3: OBJELERLE FOREACH =====
-// Object.entries ile objeleri işler.
+// 6.2 Yeni dizi oluşturmaz
+// const yeniDizi = sayilar.forEach(num => num * 2); // UNDEFINED!
 
-interface Ayarlar {
-    [key: string]: string | boolean;
+// ================ ALTERNATİFLER ================
+// 7. Map (Yeni dizi oluşturur)
+const kareler = sayilar.map(num => num * num);
+console.log(kareler); // Çıktı: [1, 4, 9]
+
+// 8. Filter (Filtreleme yapar)
+const yuksekPuanlilar = kullanicilar.filter(k => k.puan > 75);
+console.log(yuksekPuanlilar); // Çıktı: [{id: 2, ad: "Ayşe", puan: 90}]
+
+// 9. for...of (Break/Continue kullanılabilir)
+for (const num of sayilar) {
+  if (num === 2) break;
+  console.log(num); // Çıktı: 1
 }
 
-const ayarlar: Ayarlar = { tema: "koyu", bildirim: true };
-Object.entries(ayarlar).forEach(([key, val]: [string, string | boolean]) => {
-    console.log(`${key}: ${val}`);
+// ================ PRATİK ÖRNEKLER ================
+// 10. DOM Manipülasyonu (Örnek)
+const urunler = ["Laptop", "Telefon", "Tablet"];
+/*
+urunler.forEach(urun => {
+  const li = document.createElement("li");
+  li.textContent = urun;
+  document.getElementById("urun-listesi")?.appendChild(li);
 });
-// Çıktı: tema: koyu, bildirim: true
+*/
 
-// ===== BÖLÜM 4: GERÇEK HAYAT UYGULAMASI =====
-// Görev yönetimi ve analiz.
-
-interface Gorev {
-    tamam: boolean;
-    oncelik: number;
-}
-
-const gorevler: Gorev[] = [
-    { tamam: false, oncelik: 3 },
-    { tamam: true, oncelik: 1 }
+// 11. API Yanıt İşleme
+const apiYaniti: any[] = [
+  { id: 1, baslik: "Gönderi 1", okunma: false },
+  { id: 2, baslik: "Gönderi 2", okunma: true }
 ];
 
-// Örnek: Görev güncelleme
-gorevler.forEach((g: Gorev) => {
-    if (g.oncelik <= 2 && !g.tamam) g.tamam = true;
+apiYaniti.forEach(gonderi => {
+  !gonderi.okunma && console.log(`Yeni gönderi: ${gonderi.baslik}`);
 });
-console.log("Görevler:", gorevler);
-// Çıktı: [{ tamam: false, oncelik: 3 }, { tamam: true, oncelik: 1 }]
 
-// ===== BÖLÜM 5: SINIRLAR =====
-// forEach’in dönüş değeri yoktur, break kullanılamaz.
+// ================ MÜLAKAT BİLGİLERİ ================
+/*
+forEach vs map:
+- forEach: Yan etki için, değer döndürmez
+- map: Yeni dizi oluşturur, değer döndürür
 
-const sayilar2: number[] = [1, 2, 3];
-sayilar2.forEach((sayi: number) => {
-    if (sayi === 2) return;
-    console.log(`Sayı: ${sayi}`);
-});
-// Çıktı: Sayı: 1, Sayı: 3
+forEach vs for...of:
+- forEach: Array metodu, break yok
+- for...of: Her iterable'da çalışır, break var
+*/
 
-// 📌 Neden Önemli? forEach, yan etkiler için tasarlandı.
-// 📌 Mülakat İpucu: “Break için for...of, yeni array için map kullanırım.”
-
-// ===== NOTLAR VE MÜLAKAT İPUÇLARI =====
+//MÜLAKAT İPUÇLARI
 // ÖĞRENİLENLER:
 // 1. forEach: Array elemanlarını işler.
 // 2. Array: Güncelleme ve raporlama için ideal.
@@ -109,7 +108,3 @@ sayilar2.forEach((sayi: number) => {
 //   **Çözüm**: for...of kullan.
 // - **Hata**: Yeni array beklemek.
 //   **Çözüm**: Map kullan.
-
-// PRATİK İPUÇLARI:
-// - Array’den rapor oluştur.
-// - Obje özelliklerini logla.
