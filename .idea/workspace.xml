@@ -4,9 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3cf7c7c8-0f07-48eb-bf23-222adc546dd9" name="Changes" comment="some file editted ..">
+    <list default="true" id="3cf7c7c8-0f07-48eb-bf23-222adc546dd9" name="Changes" comment="oop file editted">
+      <change afterPath="$PROJECT_DIR$/JS-2.5H/6-functions/basic_method.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/JS-2.5H/6-functions/hof_and_callback.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JS-2.5H/16-oop/oop.ts" beforeDir="false" afterPath="$PROJECT_DIR$/JS-2.5H/16-oop/oop.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JS-2.5H/6-functions/app.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JS-2.5H/6-functions/callback.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JS-2.5H/6-functions/hof.ts" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,6 +87,8 @@
       <workItem from="1748528136866" duration="2257000" />
       <workItem from="1750680782193" duration="325000" />
       <workItem from="1751030244029" duration="78000" />
+      <workItem from="1755407961757" duration="29000" />
+      <workItem from="1758114547971" duration="1353000" />
     </task>
     <task id="LOCAL-00001" summary="...">
       <option name="closed" value="true" />
@@ -124,7 +130,15 @@
       <option name="project" value="LOCAL" />
       <updated>1753627208223</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="oop file editted">
+      <option name="closed" value="true" />
+      <created>1753627381567</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1753627381567</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -137,6 +151,7 @@
     <MESSAGE value="..." />
     <MESSAGE value="Simplifying some" />
     <MESSAGE value="some file editted .." />
-    <option name="LAST_COMMIT_MESSAGE" value="some file editted .." />
+    <MESSAGE value="oop file editted" />
+    <option name="LAST_COMMIT_MESSAGE" value="oop file editted" />
   </component>
 </project>
