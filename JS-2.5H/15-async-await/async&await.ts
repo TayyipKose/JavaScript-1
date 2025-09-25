@@ -1,15 +1,15 @@
 // @ts-nocheck
-// ========================= ASYNC/AWAIT SIFIRDAN ORTA SEVİYE =========================//
+// ========================= ASYNC/AWAIT: SIFIRDAN ORTA SEVİYE REHBER =========================//
 
 /*
 JavaScript'te bazı işlemler hemen bitmez:
 - API çağrısı
 - Dosya okuma
 - Timer
-Bunlar "asenkron" işlemlerdir. Async/await bunları senkron gibi yazmamızı sağlar.
+Bunlar "asenkron" işlemlerdir. Async/await, bu işlemleri senkron gibi yazmamızı sağlar.
 */
 
-// --- 1️⃣ Basit async/await mantığı ---
+// ===== 1️⃣ Temel Mantık =====
 async function basitOrnek() {
     console.log("1: Başladı");
 
@@ -24,12 +24,14 @@ async function basitOrnek() {
 basitOrnek();
 
 /*
-Mantık:
-- async fonksiyon → Promise döndürür
-- await → Promise çözülene kadar bekler, kod akışı burada durur
+🔑 Kritikler:
+- async fonksiyon → Promise döndürür.
+- await → Promise çözülene kadar bekler, kod akışı burada durur.
+- await sadece async fonksiyon içinde çalışır.
+- Eğer await edilmezse Promise direkt döner.
 */
 
-// --- 2️⃣ Hata yönetimi ---
+// ===== 2️⃣ Hata Yönetimi =====
 async function hataOrnek() {
     try {
         const sonuc = await new Promise<string>((_, reject) =>
@@ -43,7 +45,14 @@ async function hataOrnek() {
 }
 hataOrnek();
 
-// --- 3️⃣ Sıralı (bağımlı) async işlemler ---
+/*
+🔑 Kritikler:
+- try/catch → asenkron hataları yakalar.
+- await edilen Promise reject olursa catch bloğu çalışır.
+- Hata yönetimi mülakatlarda **kritik** sorulur.
+*/
+
+// ===== 3️⃣ Sıralı Async İşlemler (Bağımlı) =====
 interface Kullanici { id: string; ad: string; rol?: string }
 interface Proje { id: string; ad: string; tamam: boolean }
 
@@ -73,11 +82,16 @@ async function siraliAkis() {
 }
 siraliAkis();
 
-// --- 4️⃣ Paralel (bağımsız) async işlemler ---
+/*
+🔑 Kritikler:
+- await sıralı kullanıldığında işlemler birbiri bitmeden diğerine geçmez → yavaş olabilir.
+- Bağımlı işlemler için ideal (birinin sonucuna diğer işlem ihtiyaç duyuyor).
+*/
+
+// ===== 4️⃣ Paralel Async İşlemler (Bağımsız) =====
 async function paralelAkis() {
     console.log("Paralel akış başladı");
 
-    // Bağımsız işlemleri aynı anda başlat → Promise.all
     const [kullanici, proje] = await Promise.all([
         kullaniciGetir("u2"),
         projeGetir("p3").catch(() => ({ id: "p3", ad: "Bilinmiyor", tamam: false }))
@@ -88,19 +102,22 @@ async function paralelAkis() {
 }
 paralelAkis();
 
-// --- 5️⃣ Koşullu spread ve rapor örneği ---
+/*
+🔑 Kritikler:
+- Promise.all → bağımsız işlemleri aynı anda başlatır → hız kazandırır.
+- reject olan bir Promise'i catch ile yakalamak önemli, yoksa tüm Promise.all fail olur.
+- Mülakat sorusu: "Sıralı mı paralel mi? Neden?" → bağımlı/senaryo mantığı açıklanmalı.
+*/
+
+// ===== 5️⃣ Koşullu Spread ve Rapor Örneği =====
 async function sistemRaporu(projeIds: string[]) {
     const rapor: any[] = [];
 
     for (const pId of projeIds) {
         try {
-            // Önce proje → sıralı
             const proje = await projeGetir(pId).catch(() => ({ id: pId, ad: "Bilinmiyor", tamam: false }));
-
-            // Sonra kullanıcı
             const kullanici = await kullaniciGetir("u1");
 
-            // Koşullu spread → tamam ise durum ekle
             const projeBilgi = {
                 ...proje,
                 ...(proje.tamam && { durum: "Tamamlandı" }),
@@ -116,19 +133,22 @@ async function sistemRaporu(projeIds: string[]) {
     return rapor;
 }
 
-// --- Çalıştır ---
 (async () => {
     const rapor = await sistemRaporu(["p1", "p2", "p3"]);
     console.log("Sistem raporu:", rapor);
 })();
 
 /*
-Özet Mantık:
-1️⃣ async → fonksiyon Promise döndürür
-2️⃣ await → Promise çözülene kadar bekler
-3️⃣ try/catch → hataları yakalar
-4️⃣ Sıralı akış → bağımlı işlemleri sırayla yap
-5️⃣ Paralel akış → bağımsız işlemleri Promise.all ile hızlandır
-6️⃣ Koşullu spread → sadece gerektiğinde key ekle
-7️⃣ Kod okunaklı ve kontrol edilebilir
+========================= MÜLAKAT NOTLARI =========================
+1️⃣ async fonksiyon = her zaman Promise döndürür.
+2️⃣ await = Promise çözülene kadar bekler, sadece async içinde çalışır.
+3️⃣ try/catch = async hataları yakalamak için kritik.
+4️⃣ Sıralı akış = bağımlı işlemler için, yavaş ama güvenli.
+5️⃣ Paralel akış = bağımsız işlemler için hızlı, Promise.all kullan.
+6️⃣ Hata yönetimi = reject olan Promise'leri catch ile handle et.
+7️⃣ Kod okunaklı olmalı → karmaşık callback yerine async/await.
+8️⃣ Mülakat sorusu ipucu:
+   - "await neden kullanılır?" → senkron gibi kod yazmak, hata yönetimi.
+   - "Sıralı ve paralel farkı?" → performans ve bağımlılık mantığı.
+   - "Promise.all ile hata yakalamak?" → reject tek Promise tüm Promise.all’ı bozabilir.
 */
