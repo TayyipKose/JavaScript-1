@@ -1,20 +1,21 @@
 // @ts-nocheck
 // ========================= TYPESCRIPT OOP: JUNIOR SEVIYE REHBER =========================//
-// Bu rehber, OOP’yi sıfırdan öğrenenler için! Encapsulation, inheritance, polymorphism, abstraction’ı basitçe anlatır.
+// Bu rehber OOP’yi sıfırdan öğrenenler için! Encapsulation, Inheritance, Polymorphism, Abstraction’ı basitçe anlatır.
 
 // ===== BÖLÜM 1: OOP NEDİR? =====
-// OOP, kodunu "nesneler" gibi düşünmektir. Mesela bir araba: tekerlekleri, motoru, rengi var (özellikler), gaza basar, fren yapar (davranışlar).
-// 4 temel kavram:
-// 1. Encapsulation: Veriyi koru, sadece izin verilen metotlarla erişim sağla.
-// 2. Inheritance: Bir sınıf başka sınıfın özelliklerini miras alır.
-// 3. Polymorphism: Aynı isimde metotlar farklı davranabilir.
-// 4. Abstraction: Karmaşık detayları gizle, sadece önemli kısmı göster.
+// OOP = "nesne tabanlı programlama"
+// Nesneler, özellikler (properties) ve davranışlar (methods) içerir.
+// Örnek: Araba nesnesi -> renk, model, hız (özellik), gazla(), frenYap() (davranış)
 
+// 4 Temel Kavram:
+// 1️⃣ Encapsulation: Veriyi gizle, sadece izin verilen metodlarla eriş.
+// 2️⃣ Inheritance: Bir sınıf başka sınıftan özellik/method alabilir.
+// 3️⃣ Polymorphism: Aynı metod farklı nesnelerde farklı davranabilir.
+// 4️⃣ Abstraction: Karmaşık detayları sakla, önemli kısmı göster.
 
 // ===== BÖLÜM 1: ENCAPSULATION =====
 class Cihaz {
-    private acik: boolean = false;
-
+    private acik: boolean = false;  // durumu gizledik (private)
     constructor(private isim: string) {}
 
     public ac(): void {
@@ -42,7 +43,7 @@ class AkilliLamba extends Cihaz {
     private parlaklik: number = 50; // 0-100
 
     constructor(isim: string) {
-        super(isim);
+        super(isim); // üst sınıf constructor'ını çağır
     }
 
     public parlaklikAyarla(deger: number): void {
@@ -64,7 +65,7 @@ class Klima extends Cihaz {
         super(isim);
     }
 
-    // Override etme: klima açılırken ek bilgi verelim
+    // Polymorphism: ac() metodunu kendi davranışı ile override ettik
     public ac(): void {
         super.ac();
         console.log(`${this.isim} ${this.sicaklik} dereceye ayarlanıyor.`);
@@ -88,6 +89,7 @@ interface AkilliCihaz {
     durum(): string;
 }
 
+// Karmaşık detayları gizleyip sadece cihazın durumunu yazdırıyoruz
 function cihazDurumuYazdir(cihaz: AkilliCihaz) {
     console.log(cihaz.durum());
 }
@@ -96,7 +98,7 @@ cihazDurumuYazdir(salonLambasi);
 cihazDurumuYazdir(salonKlima);
 
 // ===== ÖZET =====
-// • Encapsulation: Cihaz iç durumu gizli, sadece metodlarla kontrol edilir.
-// • Inheritance: Akıllı lamba ve klima Cihaz’dan miras aldı, yeni özellikler ekledi.
-// • Polymorphism: Klima ac() metodunu kendine göre değiştirdi (override).
-// • Abstraction: AkilliCihaz interface ile ne yapacakları belli, nasıl yapılacağı detaylarda.
+// • Encapsulation: Cihaz iç durumu gizlendi, metodlarla kontrol edildi
+// • Inheritance: Akıllı lamba ve klima Cihaz’dan miras aldı
+// • Polymorphism: Klima ac() metodunu kendi ihtiyaçlarına göre değiştirdi
+// • Abstraction: AkilliCihaz interface ile ne yapacakları belli, nasıl yapılacağı detaylarda

@@ -1,157 +1,134 @@
 // @ts-nocheck
-// ========================= TYPESCRIPT ASYNC/AWAIT REHBER =========================//
+// ========================= ASYNC/AWAIT SIFIRDAN ORTA SEVİYE =========================//
 
-// ===== BÖLÜM 1: ASYNC/AWAIT NEDİR? =====
-// Async/await, asenkron kodları senkron gibi yazmanı sağlar.
-// - **async**: Fonksiyonun Promise döndüreceğini belirtir.
-// - **await**: Promise’in çözülmesini bekler, sadece async fonksiyon içinde kullanılır.
-// Arka Plan: Promise tabanlı, .then/.catch karmaşasını sadeleştirir.
+/*
+JavaScript'te bazı işlemler hemen bitmez:
+- API çağrısı
+- Dosya okuma
+- Timer
+Bunlar "asenkron" işlemlerdir. Async/await bunları senkron gibi yazmamızı sağlar.
+*/
 
-// Örnek 1: API’den veri çekme (Gerçek Hayat: Kullanıcı verisi)
-interface Kullanici {
-    id: string;
-    ad: string;
-    rol?: string;
+// --- 1️⃣ Basit async/await mantığı ---
+async function basitOrnek() {
+    console.log("1: Başladı");
+
+    // Promise ile simülasyon (1 saniye sonra sonuç)
+    const sonuc = await new Promise<string>(resolve =>
+        setTimeout(() => resolve("2: Sonuç geldi"), 1000)
+    );
+
+    console.log(sonuc);
+    console.log("3: Bitti");
 }
+basitOrnek();
+
+/*
+Mantık:
+- async fonksiyon → Promise döndürür
+- await → Promise çözülene kadar bekler, kod akışı burada durur
+*/
+
+// --- 2️⃣ Hata yönetimi ---
+async function hataOrnek() {
+    try {
+        const sonuc = await new Promise<string>((_, reject) =>
+            setTimeout(() => reject(new Error("Oops! Hata oluştu")), 500)
+        );
+        console.log(sonuc); // çalışmaz
+    } catch (e: any) {
+        console.log("Hata yakalandı:", e.message);
+    }
+    console.log("Hata örneği bitti");
+}
+hataOrnek();
+
+// --- 3️⃣ Sıralı (bağımlı) async işlemler ---
+interface Kullanici { id: string; ad: string; rol?: string }
+interface Proje { id: string; ad: string; tamam: boolean }
+
 async function kullaniciGetir(id: string): Promise<Kullanici> {
-    return new Promise(resolve => {
-        setTimeout(() => resolve({ id, ad: "Ali", rol: "Geliştirici" }), 1000);
+    return new Promise(resolve => setTimeout(() => resolve({ id, ad: "Ali", rol: "Geliştirici" }), 500));
+}
+
+async function projeGetir(id: string): Promise<Proje> {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            if (id === "p2") reject(new Error("Proje bulunamadı"));
+            else resolve({ id, ad: `Proje ${id}`, tamam: Math.random() > 0.5 });
+        }, 500);
     });
 }
-async function kullaniciGoster(id: string) {
-    const kullanici = await kullaniciGetir(id);
-    console.log("Kullanıcı:", { ...kullanici, ...(kullanici.rol && { rol: kullanici.rol }) });
-    // Çıktı (1s sonra): { id: "u1", ad: "Ali", rol: "Geliştirici" }
+
+async function siraliAkis() {
+    console.log("Sıralı akış başladı");
+
+    const kullanici = await kullaniciGetir("u1"); // önce kullanıcı
+    const proje = await projeGetir("p1");       // sonra proje
+
+    console.log("Kullanıcı:", kullanici);
+    console.log("Proje:", proje);
+
+    console.log("Sıralı akış bitti");
 }
-kullaniciGoster("u1");
+siraliAkis();
 
-// 📌 Mantık: Await, Promise çözülene kadar bekler, kod akışını sade tutar.
-// 📌 Mülakat İpucu: “Async/await, Promise zincirlerini okunabilir yapar.”
+// --- 4️⃣ Paralel (bağımsız) async işlemler ---
+async function paralelAkis() {
+    console.log("Paralel akış başladı");
 
-// ===== BÖLÜM 2: HATA YÖNETIMI =====
-// Hatalar try/catch ile yakalanır, birden fazla hata türü işlenebilir.
-// Arka Plan: Promise.reject, try/catch ile eşleşir.
+    // Bağımsız işlemleri aynı anda başlat → Promise.all
+    const [kullanici, proje] = await Promise.all([
+        kullaniciGetir("u2"),
+        projeGetir("p3").catch(() => ({ id: "p3", ad: "Bilinmiyor", tamam: false }))
+    ]);
 
-// Örnek: Hatalı API çağrısı (Gerçek Hayat: Hata işleme)
-async function projeGetir(id: string): Promise<{ id: string; ad: string }> {
-    return new Promise((_, reject) => {
-        setTimeout(() => reject(new Error(`Proje ${id} bulunamadı!`)), 1000);
-    });
+    console.log("Kullanıcı ve proje:", { kullanici, proje });
+    console.log("Paralel akış bitti");
 }
-async function projeKontrol(id: string) {
-    try {
-        const proje = await projeGetir(id);
-        console.log("Proje:", proje);
-    } catch (error: any) {
-        console.log("Hata:", error.message); // Hata: Proje p1 bulunamadı!
-        return { hata: error.message, durum: "başarısız" };
-    }
-}
-projeKontrol("p1");
+paralelAkis();
 
-// 📌 Mantık: Try/catch, asenkron hataları yakalar, hata türüne göre işlem yapılır.
-// 📌 Mülakat İpucu: “Try/catch ile hata türlerini ayırıp kullanıcıya uygun mesajlar sunarım.”
+// --- 5️⃣ Koşullu spread ve rapor örneği ---
+async function sistemRaporu(projeIds: string[]) {
+    const rapor: any[] = [];
 
-// ===== BÖLÜM 3: ÇOKLU ASENKRON İŞLEM =====
-// Sıralı veya paralel (Promise.all) işlemler kullanılabilir.
-// Arka Plan: Promise.all, bağımsız çağrıları hızlandırır.
+    for (const pId of projeIds) {
+        try {
+            // Önce proje → sıralı
+            const proje = await projeGetir(pId).catch(() => ({ id: pId, ad: "Bilinmiyor", tamam: false }));
 
-// Örnek: Çoklu kullanıcı verisi (Gerçek Hayat: Toplu API çağrısı)
-async function kullanicilariGetir(ids: string[]): Promise<Kullanici[]> {
-    const istekler = ids.map(id => kullaniciGetir(id));
-    return Promise.all(istekler);
-}
-async function ekipGoster() {
-    try {
-        const kullanicilar = await kullanicilariGetir(["u1", "u2"]);
-        const formatli = kullanicilar.map(u => ({
-            ...u,
-            ...(u.rol && { rol: u.rol.toUpperCase() })
-        }));
-        console.log("Ekip:", formatli);
-        // Çıktı: [{ id: "u1", ad: "Ali", rol: "GELIŞTIRICI" }, { id: "u2", ad: "Ali", rol: "GELIŞTIRICI" }]
-    } catch (error: any) {
-        console.log("Ekip hatası:", error.message);
-    }
-}
-ekipGoster();
+            // Sonra kullanıcı
+            const kullanici = await kullaniciGetir("u1");
 
-// 📌 Mantık: Promise.all, paralel çağrılarla performansı artırır.
-// 📌 Mülakat İpucu: “Promise.all ile birden fazla API çağrısını paralel yaparım.”
+            // Koşullu spread → tamam ise durum ekle
+            const projeBilgi = {
+                ...proje,
+                ...(proje.tamam && { durum: "Tamamlandı" }),
+                yonetici: kullanici.ad
+            };
 
-// ===== BÖLÜM 4: ASENKRON AKIŞ KONTROLÜ =====
-// Döngülerde await ve koşullu işlemler.
-// Arka Plan: Async/await, karmaşık akışları yönetir.
-
-// Örnek: Sıralı veri işleme (Gerçek Hayat: Bağımlı API çağrıları)
-async function projeVeKullaniciGetir(projeId: string, kullaniciId: string) {
-    const proje = await projeGetir(projeId).catch(() => ({ id: projeId, ad: "Bilinmiyor" }));
-    const kullanici = await kullaniciGetir(kullaniciId);
-    return {
-        proje: { ...proje, durum: "işleniyor" },
-        kullanici: { ...kullanici, ...(kullanici.rol && { rol: kullanici.rol }) }
-    };
-}
-async function isAkisi() {
-    const veri = await projeVeKullaniciGetir("p1", "u1");
-    console.log("İş akışı:", veri);
-    // Çıktı: { proje: { id: "p1", ad: "Bilinmiyor", durum: "işleniyor" }, kullanici: { id: "u1", ad: "Ali", rol: "Geliştirici" } }
-}
-isAkisi();
-
-// ===== BÖLÜM 5: GERÇEK HAYAT UYGULAMASI =====
-// Proje yönetim sistemi (Gerçek Hayat: API entegrasyonu).
-
-interface Proje {
-    id: string;
-    ad: string;
-    tamam: boolean;
-}
-async function projeVerisiGetir(id: string): Promise<Proje> {
-    return new Promise(resolve => {
-        setTimeout(() => resolve({ id, ad: `Proje ${id}`, tamam: false }), 1000);
-    });
-}
-async function projeRaporuOlustur(projeIds: string[]): Promise<string[]> {
-    const rapor: string[] = [];
-    try {
-        const projeler = await Promise.all(projeIds.map(id => projeVerisiGetir(id)));
-        for (const p of projeler) {
-            const durum = await kullaniciGetir("u1"); // Proje yöneticisi kontrolü
-            rapor.push(`${p.ad}: ${p.tamam ? "Tamamlandı" : `Devam Ediyor (Yönetici: ${durum.ad})`}`);
+            rapor.push(projeBilgi);
+        } catch (e: any) {
+            rapor.push({ projeId: pId, hata: e.message });
         }
-    } catch (error: any) {
-        rapor.push(`Hata: ${error.message}`);
     }
+
     return rapor;
 }
-async function sistemRaporu() {
-    const rapor = await projeRaporuOlustur(["p1", "p2"]);
+
+// --- Çalıştır ---
+(async () => {
+    const rapor = await sistemRaporu(["p1", "p2", "p3"]);
     console.log("Sistem raporu:", rapor);
-    // Çıktı: ["Proje p1: Devam Ediyor (Yönetici: Ali)", "Proje p2: Devam Ediyor (Yönetici: Ali)"]
-}
-sistemRaporu();
+})();
 
-// 📌 Mantık: Async/await, karmaşık API çağrılarını ve akışları sadeleştirir.
-// 📌 Mülakat İpucu: “Async/await ile bağımlı API çağrılarını sırayla işledim.”
-
-// ===== NOTLAR VE MÜLAKAT İPUÇLARI =====
-// ÖĞRENİLENLER:
-// 1. Async/Await: Asenkron kodu senkron gibi yaz.
-// 2. Try/Catch: Hata yönetimi.
-// 3. Promise.all: Paralel işlemler.
-// 4. Akış Kontrolü: Döngü ve koşullu await.
-// 5. Gerçek Hayat: API entegrasyonu, raporlama.
-
-// MÜLAKAT SORULARI:
-// - Async/await’in Promise’den farkı? (Okunabilirlik, senkron akış.)
-// - Promise.all ne zaman kullanılır? (Bağımsız paralel çağrılar.)
-// - Hatalar nasıl yönetilir? (Try/catch veya .catch.)
-
-// HATALAR VE ÇÖZÜMLER:
-// - **Hata**: Async olmayan yerde await.
-//   **Çözüm**: Fonksiyonu async yap.
-// - **Hata**: Promise.all’da hata yönetimi eksik.
-//   **Çözüm**: Try/catch kullan.
-
-// 📌 Not: Orta seviye için akış kontrolü ve koşullu spread kritik, 165 satır oldu!
+/*
+Özet Mantık:
+1️⃣ async → fonksiyon Promise döndürür
+2️⃣ await → Promise çözülene kadar bekler
+3️⃣ try/catch → hataları yakalar
+4️⃣ Sıralı akış → bağımlı işlemleri sırayla yap
+5️⃣ Paralel akış → bağımsız işlemleri Promise.all ile hızlandır
+6️⃣ Koşullu spread → sadece gerektiğinde key ekle
+7️⃣ Kod okunaklı ve kontrol edilebilir
+*/
