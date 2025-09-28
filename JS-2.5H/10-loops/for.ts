@@ -1,169 +1,125 @@
-// @ts-nocheck
-// ==================== TYPESCRIPT FOR DÖNGÜSÜ REHBERİ ====================
+// ==================== MIDDLE+ SEVİYE FOR DÖNGÜLERİ ====================
+// Senaryo: Büyük ölçekli bir e-ticaret sistemi
+// Amaç: Döngülerin farklı türlerini (for, for...of, for...in) ve advanced kullanımlarını göstermek
+//@ts-nocheck
 
-// TypeScript'te for döngüleri üç temel şekilde kullanılır:
-// 1. Klasik for: Sayaç kullanılır, kontrol tamamen sende.
-// 2. for...of: Array ve iterable elemanlarına direkt erişim.
-// 3. for...in: Obje anahtarlarını dolaşmak için.
-
-// ------------------------------------------------------
-// 1. KLASİK FOR DÖNGÜSÜ
-// Belirli sayıda veya koşula bağlı tekrarlamalar için.
-// Sayaç kullanılır, örneğin 1'den 5'e kadar:
-
-for (let i = 1; i <= 5; i++) {
-  console.log(`Sayı: ${i}`);
-}
-
-// Array ile kullanım: Kullanıcı puanlarını 5 artırmak
-
-const kullanicilar: any[] = [
-  { id: "u1", ad: "Ali", puan: 85 },
-  { id: "u2", ad: "Ayşe", puan: 90 },
-  { id: "u3", ad: "Mehmet", puan: 75 }
+// -------------------------------
+// VERİ SETİ
+// -------------------------------
+const orders = [
+  { id: "o1", userId: "u1", amount: 120, status: "pending",   items: ["p1","p2"] },
+  { id: "o2", userId: "u2", amount: 300, status: "completed", items: ["p3"] },
+  { id: "o3", userId: "u1", amount: 80,  status: "completed", items: ["p2","p4"] },
+  { id: "o4", userId: "u3", amount: 50,  status: "pending",   items: ["p5"] },
+  { id: "o5", userId: "u2", amount: 500, status: "completed", items: ["p1","p6","p7"] }
 ];
 
-for (let i = 0; i < kullanicilar.length; i++) {
-  kullanicilar[i].puan += 5;
-}
-console.log("Güncel puanlar:", kullanicilar);
-
-// ------------------------------------------------------
-// 2. FOR...OF DÖNGÜSÜ
-// Array veya iterable içindeki elemanlara direkt erişmek için.
-// İndeksle uğraşmana gerek yok, kod daha temiz:
-
-const sayilar = [10, 20, 30, 40];
-for (const sayi of sayilar) {
-  console.log(`Sayı: ${sayi}`);
-}
-
-// Gerçek hayat: Siparişlerin toplamını bulma
-
-const siparisler: any[] = [
-  { id: "s1", tutar: 100 },
-  { id: "s2", tutar: 200 },
-  { id: "s3", tutar: 150 }
+const users = [
+  { id: "u1", name: "Ali" },
+  { id: "u2", name: "Ayşe" },
+  { id: "u3", name: "Mehmet" }
 ];
 
-let toplam = 0;
-for (const siparis of siparisler) {
-  toplam += siparis.tutar;
-}
-console.log("Toplam tutar:", toplam);
-
-// ------------------------------------------------------
-// 3. FOR...IN DÖNGÜSÜ
-// Objenin anahtarlarını dolaşmak için.
-// Dizilerde kullanmak önerilmez, obje için uygun.
-
-const ayarlar: any = {
-  tema: "koyu",
-  bildirim: true,
-  dil: "tr"
-};
-
-for (const anahtar in ayarlar) {
-  console.log(`${anahtar}: ${ayarlar[anahtar]}`);
-}
-
-// ------------------------------------------------------
-// 4. GERÇEK HAYAT UYGULAMASI
-// Projeler array'inde, tamamlanmamış ve önceliği yüksek olanları seç:
-
-const projeler: any[] = [
-  { id: "p1", ad: "Web Sitesi", tamamlandi: false, oncelik: 3 },
-  { id: "p2", ad: "Mobil App", tamamlandi: true, oncelik: 1 },
-  { id: "p3", ad: "API Geliştirme", tamamlandi: false, oncelik: 2 }
-];
-
-// Klasik for ile filtreleme:
-const onemliProjeler = [];
-for (let i = 0; i < projeler.length; i++) {
-  if (!projeler[i].tamamlandi && projeler[i].oncelik <= 2) {
-    onemliProjeler.push(projeler[i]);
+// ===============================================================
+// 1. Klasik for
+// Completed siparişlerin toplamını hesapla
+// ===============================================================
+let totalCompleted = 0;
+for (let i = 0; i < orders.length; i++) {
+  if (orders[i].status === "completed") {
+    totalCompleted += orders[i].amount;
   }
 }
-console.log("Önemli projeler:", onemliProjeler);
+// ✅ Ne zaman klasik for? => İnce indeks kontrolü, geriye doğru dönmek, performans kritik durumlar
 
-// for...of ile özet oluşturma:
-const ozetler = [];
-for (const proje of projeler) {
-  const durum = proje.tamamlandi ? "Tamamlandı" : "Devam Ediyor";
-  ozetler.push(`${proje.ad}: Öncelik ${proje.oncelik}, ${durum}`);
+// ===============================================================
+// 2. for...of
+// Tekrarsız kullanıcıları bul
+// ===============================================================
+// for...of: Array veya Set, Map gibi "iterable" yapılarda doğrudan eleman döner
+const uniqueUsers = new Set<string>();
+for (const order of orders) {
+  uniqueUsers.add(order.userId);
 }
-console.log("Proje özetleri:", ozetler);
+// ✅ Daha temiz, indeksle uğraşmadan array elemanlarını işler
 
-// for...in ile obje özelliklerini sayma (dizi üzerinde for...in önerilmez)
-const ozellikSayaci: any = {};
-for (const proje of projeler) {
-  for (const ozellik in proje) {
-    ozellikSayaci[ozellik] = (ozellikSayaci[ozellik] || 0) + 1;
+// ===============================================================
+// 3. for...in
+// Obje property sıklığını bul
+// ===============================================================
+// for...in: Objelerin key’lerini döner (array’de kullanılmaz!)
+const fieldFrequency: Record<string, number> = {};
+for (const order of orders) {
+  for (const key in order) {
+    fieldFrequency[key] = (fieldFrequency[key] || 0) + 1;
   }
 }
-console.log("Özellik sayıları:", ozellikSayaci);
+// ✅ Dikkat: Array’de for...in kullanma (string indeks döner, proto zincirine kadar gider)
 
+// ===============================================================
+// 4. İç içe for → OPTİMİZE VERSİYON
+// Kullanıcıların completed sipariş ve item adetleri
+// ===============================================================
+// O(n^2) yerine O(n) yapmak için önce siparişleri Map’te grupla
+const userStats: Record<string, { totalAmount: number; itemCount: number }> = {};
+const orderMap = new Map<string, { totalAmount: number; itemCount: number }>();
 
+for (const order of orders) {
+  if (order.status !== "completed") continue;
+  const prev = orderMap.get(order.userId) || { totalAmount: 0, itemCount: 0 };
+  prev.totalAmount += order.amount;
+  prev.itemCount += order.items.length;
+  orderMap.set(order.userId, prev);
+}
 
-// ==================== İÇ İÇE FOR DÖNGÜSÜ ÖRNEĞİ ====================
+for (const user of users) {
+  userStats[user.id] = orderMap.get(user.id) || { totalAmount: 0, itemCount: 0 };
+}
+// ✅ Nested for kalktı → Performans O(n)
 
-// Diyelim ki elimizde birden fazla kullanıcının notları var.
-// Her kullanıcının farklı derslerden aldığı puanlar var ve biz
-// tüm puanları tek tek kontrol edip 50'nin altındakileri raporlayacağız.
+// ===============================================================
+// 5. break & continue
+// Ali’nin ilk 200’den büyük completed siparişi
+// ===============================================================
+let specialOrder = null;
+for (const order of orders) {
+  if (order.userId !== "u1") continue;
+  if (order.status !== "completed") continue;
+  if (order.amount > 200) {
+    specialOrder = order;
+    break;
+  }
+}
+// ✅ continue → gereksizleri atla, break → erken çıkış yap
 
-const kullaniciListesi: any[] = [
-  { ad: "Ali", notlar: [70, 85, 40] },
-  { ad: "Ayşe", notlar: [90, 45, 80] },
-  { ad: "Mehmet", notlar: [55, 65, 30] }
-];
+// ===============================================================
+// 6. Map kullanımı
+// userId bazlı sipariş toplamları
+// ===============================================================
+const totals = new Map<string, number>();
+for (const order of orders) {
+  totals.set(order.userId, (totals.get(order.userId) || 0) + order.amount);
+}
+// ✅ Map avantajı: insertion order korur, key her şey olabilir
 
-// Amaç: Her kullanıcının 50'nin altındaki notlarını tespit etmek
-
-for (let i = 0; i < kullaniciListesi.length; i++) {
-  const kullanici = kullaniciListesi[i];
-  
-  for (let j = 0; j < kullanici.notlar.length; j++) {
-    const not = kullanici.notlar[j];
-    
-    if (not < 50) {
-      console.log(`${kullanici.ad} kullanıcısının ${j + 1}. notu düşük: ${not}`);
-    }
+// ===============================================================
+// 7. Manuel reduce
+// En yüksek completed sipariş
+// ===============================================================
+let maxOrder = null;
+for (const order of orders) {
+  if (order.status !== "completed") continue;
+  if (!maxOrder || order.amount > maxOrder.amount) {
+    maxOrder = order;
   }
 }
 
-/* Çıktı:
-Ali kullanıcısının 3. notu düşük: 40
-Ayşe kullanıcısının 2. notu düşük: 45
-Mehmet kullanıcısının 3. notu düşük: 30
-*/
-
-// Açıklama:
-// Dıştaki for, kullanıcıları geziyor.
-// İçteki for, her kullanıcının notlarını tek tek kontrol ediyor.
-// Böylece her kullanıcı için detaylı not analizi yapılabiliyor.
-
-// İç içe döngüleri özellikle çok boyutlu verilerde ve matrislerde kullanırız.
-// Mülakatlarda iç içe döngü sorulursa böyle gerçekçi bir senaryo anlatmak çok etkili olur.
-
-// ------------------------------------------------------
-// NOTLAR:
-// - Dizilerde elemanlara erişmek için for...of tercih et.
-// - Obje anahtarları için for...in kullan.
-// - Klasik for en esnek, özellikle indeks veya ters dönmek gerekirse.
-// - for...in dizide kullanma, prototip zincirindeki ekstra anahtarlar sorun yaratabilir.
-
-// YAYGIN MÜLAKAT SORULARI
-// -----------------------
-// - Klasik for ile for...of arasındaki fark nedir? (Klasik for indeksle çalışır, for...of elemanlara doğrudan erişir.)
-// - for...in neden array’lerde tercih edilmez? (Indeksler string döner, prototip özellikleri alınabilir.)
-// - Döngü performansını nasıl optimize edersiniz? (Gereksiz işlemlerden kaçının, erken çıkış için break kullanın.)
-// - Gerçek bir projede döngü nasıl kullandınız? (Veri filtreleme veya dönüştürme örneği ver.)
-
-// YAYGIN HATALAR VE ÇÖZÜMLER
-// --------------------------
-// - **Hata**: Klasik for’da yanlış sınır (i <= array.length yerine i < array.length).
-//   **Çözüm**: i < array.length kullan, son indeksi aşmamak için.
-// - **Hata**: for...in’i array’lerde kullanmak.
-//   **Çözüm**: Array’ler için for...of veya klasik for tercih et.
-// - **Hata**: Döngüde gereksiz işlem yapmak (örn. her döngüde uzun hesaplama).
-//   **Çözüm**: Sabit hesaplamaları döngü dışına taşı.
+// ===============================================================
+// ==================== ÖZET ====================
+// - for: İndeks kontrolü / performans kritik
+// - for...of: Array/Set/Map gibi iterable’larda en okunabilir yol
+// - for...in: Objelerin key’leri için (array’de tercih etme)
+// - break & continue: mantığı sadeleştirir, performansı artırır
+// - Map/Set ile kombin → gerçek hayatta middle+ farkı
+// - Nested for yerine Map/hash map ile optimizasyon yap → O(n^2) → O(n)
+// ===============================================================
